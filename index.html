@@ -1,1 +1,166 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hệ Thống Trắc Nghiệm</title>
+
+<style>
+body{
+    font-family: Arial;
+    background: linear-gradient(135deg,#2196f3,#00bcd4);
+    margin:0;
+}
+.box{
+    max-width:800px;
+    margin:20px auto;
+    background:white;
+    padding:20px;
+    border-radius:14px;
+    box-shadow:0 4px 15px rgba(0,0,0,.3);
+}
+h2{text-align:center;color:#1565c0}
+button{
+    width:100%;
+    padding:12px;
+    margin-top:10px;
+    background:#1e88e5;
+    color:white;
+    border:none;
+    border-radius:8px;
+    font-size:16px;
+}
+.answer{
+    border:1px solid #ccc;
+    padding:10px;
+    margin:6px 0;
+    border-radius:6px;
+    cursor:pointer;
+}
+.answer:hover{background:#e3f2fd}
+.correct{background:#43a047;color:white}
+.wrong{background:#e53935;color:white}
+.progress{height:8px;background:#ddd;border-radius:6px;overflow:hidden}
+.bar{height:100%;width:0%;background:#1e88e5}
+textarea,input{width:100%;padding:8px;margin:5px 0}
+.hidden{display:none}
+</style>
+</head>
+
+<body>
+
+<div class="box" id="home">
+<h2>📘 HỆ THỐNG TRẮC NGHIỆM</h2>
+<button onclick="openStudent()">👨‍🎓 HỌC SINH</button>
+<button onclick="openTeacher()">🧑‍🏫 NƠI SOẠN ĐỀ</button>
+</div>
+
+<!-- SOẠN ĐỀ -->
+<div class="box hidden" id="teacher">
+<h2>🧑‍🏫 SOẠN ĐỀ</h2>
+<input id="q" placeholder="Nhập câu hỏi">
+<input id="a1" placeholder="Đáp án A">
+<input id="a2" placeholder="Đáp án B">
+<input id="a3" placeholder="Đáp án C">
+<input id="a4" placeholder="Đáp án D">
+<select id="correct">
+<option value="0">Đáp án đúng: A</option>
+<option value="1">Đáp án đúng: B</option>
+<option value="2">Đáp án đúng: C</option>
+<option value="3">Đáp án đúng: D</option>
+</select>
+<button onclick="saveQuestion()">➕ Lưu câu hỏi</button>
+<button onclick="back()">⬅ Quay lại</button>
+<div id="count"></div>
+</div>
+
+<!-- HỌC SINH -->
+<div class="box hidden" id="student">
+<h2>📘 BÀI KIỂM TRA</h2>
+<div class="progress"><div class="bar" id="bar"></div></div>
+<div id="quiz"></div>
+<button onclick="next()">Tiếp theo</button>
+<div id="result"></div>
+</div>
+
+<audio id="ting" src="https://www.soundjay.com/buttons/sounds/button-3.mp3"></audio>
+<audio id="wrong" src="https://www.soundjay.com/buttons/sounds/button-10.mp3"></audio>
+
+<script>
+let questions = JSON.parse(localStorage.getItem("questions")||"[]");
+let i=0,score=0,selected=-1;
+
+function openTeacher(){
+ home.style.display="none";
+ teacher.classList.remove("hidden");
+ updateCount();
+}
+
+function openStudent(){
+ if(questions.length==0){alert("Chưa có đề!");return;}
+ home.style.display="none";
+ student.classList.remove("hidden");
+ load();
+}
+
+function back(){
+ location.reload();
+}
+
+function saveQuestion(){
+ let q={
+   q:q.value,
+   a:[a1.value,a2.value,a3.value,a4.value],
+   correct:parseInt(correct.value)
+ };
+ questions.push(q);
+ localStorage.setItem("questions",JSON.stringify(questions));
+ alert("Đã lưu câu hỏi!");
+ q.value=a1.value=a2.value=a3.value=a4.value="";
+ updateCount();
+}
+
+function updateCount(){
+ count.innerHTML="📌 Tổng câu: "+questions.length;
+}
+
+function load(){
+ let q=questions[i];
+ let html=`<b>Câu ${i+1}: ${q.q}</b>`;
+ q.a.forEach((x,j)=>{
+   html+=`<div class="answer" onclick="choose(${j},this)">${x}</div>`;
+ });
+ quiz.innerHTML=html;
+ bar.style.width=(i/questions.length*100)+"%";
+}
+
+function choose(j,el){
+ selected=j;
+ document.querySelectorAll(".answer").forEach(e=>e.classList.remove("active"));
+ el.classList.add("active");
+}
+
+function next(){
+ if(selected==-1){alert("Chọn đáp án");return;}
+ let q=questions[i];
+ let answers=document.querySelectorAll(".answer");
+ if(selected==q.correct){
+   answers[selected].classList.add("correct");
+   ting.play(); score++;
+ }else{
+   answers[selected].classList.add("wrong");
+   wrong.play();
+ }
+ setTimeout(()=>{
+   i++; selected=-1;
+   if(i<questions.length) load();
+   else{
+     quiz.innerHTML="";
+     result.innerHTML=`🎉 Hoàn thành<br>Điểm: <b>${score}/${questions.length}</b>`;
+   }
+ },600);
+}
+</script>
+</body>
+</html>
 
