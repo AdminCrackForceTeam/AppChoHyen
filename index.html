@@ -6,309 +6,211 @@
 <title>Hệ Thống Trắc Nghiệm Full</title>
 <style>
 body{margin:0;font-family:Arial,sans-serif;background: linear-gradient(135deg,#2196f3,#00bcd4);color:#333;}
-.box{max-width:900px;margin:20px auto;background:white;padding:20px;border-radius:12px;box-shadow:0 6px 20px rgba(0,0,0,0.3);position:relative;}
-h2{text-align:center;color:#1565c0;margin-bottom:20px}
-button{width:100%;padding:12px;border:none;border-radius:8px;background:#1e88e5;color:white;font-size:16px;margin:6px 0;cursor:pointer;transition:0.3s}
+.box{max-width:900px;margin:20px auto;background:white;padding:20px;border-radius:12px;box-shadow:0 6px 20px rgba(0,0,0,0.3);}
+h2{text-align:center;color:#1565c0}
+button{width:100%;padding:12px;border:none;border-radius:8px;background:#1e88e5;color:white;font-size:16px;margin:6px 0}
 button:hover{background:#1565c0}
-input,select{width:100%;padding:8px;margin:5px 0;border-radius:6px;border:1px solid #ccc;}
-.answer{border:1px solid #ccc;padding:10px;margin:6px 0;border-radius:6px;cursor:pointer;transition:0.2s;}
-.answer:hover{background:#e3f2fd; transform:scale(1.02);}
+input,select{width:100%;padding:8px;margin:5px 0;border-radius:6px;border:1px solid #ccc}
+.answer{border:1px solid #ccc;padding:10px;margin:6px 0;border-radius:6px;cursor:pointer}
+.answer:hover{background:#e3f2fd}
 .correct{background:#43a047;color:white}
 .wrong{background:#e53935;color:white}
-.progress{height:10px;background:#ddd;border-radius:6px;overflow:hidden;margin:10px 0;}
+.progress{height:10px;background:#ddd;border-radius:6px;overflow:hidden;margin:10px 0}
 .bar{height:100%;background:#1e88e5;width:0%}
 .hidden{display:none}
-.list{background:#f5f5f5;padding:8px;margin:6px 0;border-radius:6px;display:flex;justify-content:space-between;align-items:center;box-shadow:1px 1px 5px rgba(0,0,0,0.1);}
-header{background:rgba(0,0,0,0.05);padding:10px;margin-bottom:20px;border-radius:10px;text-align:center;font-size:18px;font-weight:bold;}
-hr{margin:20px 0;}
-table{width:100%;border-collapse:collapse;}
-table,th,td{border:1px solid #ccc;}
-th,td{padding:8px;text-align:left;}
-th{background:#1e88e5;color:white;}
+.list{background:#f5f5f5;padding:8px;margin:6px 0;border-radius:6px;display:flex;justify-content:space-between}
+header{text-align:center;font-weight:bold;margin-bottom:10px}
+table{width:100%;border-collapse:collapse}
+td,th{border:1px solid #ccc;padding:6px}
+th{background:#1e88e5;color:white}
 </style>
 </head>
 <body>
 
 <!-- MENU -->
 <div class="box" id="menu">
-<header>📘 HỆ THỐNG TRẮC NGHIỆM CHUYÊN NGHIỆP</header>
+<header>📘 HỆ THỐNG TRẮC NGHIỆM</header>
 <button onclick="loginTeacher()">🧑‍🏫 GIÁO VIÊN</button>
 <button onclick="openStudent()">👨‍🎓 HỌC SINH</button>
 </div>
 
-<!-- LOGIN GIÁO VIÊN -->
+<!-- LOGIN -->
 <div class="box hidden" id="login">
-<header>🔒 Đăng nhập giáo viên</header>
-<input type="password" id="pwd" placeholder="Nhập mật khẩu giáo viên">
+<input type="password" id="pwd" placeholder="Mật khẩu giáo viên">
 <button onclick="checkPwd()">Đăng nhập</button>
-<button onclick="backMenu()">⬅ Quay lại MENU</button>
+<button onclick="backMenu()">⬅ Quay lại</button>
 </div>
 
 <!-- GIÁO VIÊN -->
 <div class="box hidden" id="teacher">
-<header>🧑‍🏫 SOẠN ĐỀ / XEM ĐIỂM</header>
+<header>🧑‍🏫 QUẢN LÝ CÂU HỎI</header>
 
-<h3>📄 Quản lý câu hỏi</h3>
 <select id="subject">
-<option value="toan">📘 Toán</option>
-<option value="nguvan">📕 Ngữ Văn</option>
-<option value="hoa">📗 Hóa</option>
-<option value="sinh">📙 Sinh</option>
-<option value="su">📓 Sử</option>
-<option value="dia">📔 Địa</option>
-<option value="vatly">📒 Vật Lý</option>
+<option value="toan">Toán</option>
+<option value="nguvan">Ngữ văn</option>
+<option value="hoa">Hóa</option>
+<option value="sinh">Sinh</option>
+<option value="su">Sử</option>
+<option value="dia">Địa</option>
+<option value="vatly">Vật lý</option>
 </select>
-<label><input type="checkbox" id="limitOnce"> Chỉ cho phép học sinh làm môn này 1 lần trên thiết bị</label>
-<input id="q" placeholder="Nhập câu hỏi">
+
+<input id="q" placeholder="Câu hỏi">
 <input id="a1" placeholder="Đáp án A">
 <input id="a2" placeholder="Đáp án B">
 <input id="a3" placeholder="Đáp án C">
 <input id="a4" placeholder="Đáp án D">
-<select id="correct">
-<option value="0">Đúng: A</option>
-<option value="1">Đúng: B</option>
-<option value="2">Đúng: C</option>
-<option value="3">Đúng: D</option>
-</select>
-<button onclick="addQuestion()">➕ Lưu câu hỏi</button>
-<button onclick="loadList()">📄 Xem / Xoá câu hỏi</button>
 
-<hr>
-<h3>📂 Import đề cương</h3>
-<input type="file" id="fileInput" accept=".json">
-<button onclick="importFile()">📂 Import đề cương</button>
+<select id="correct">
+<option value="0">Đúng A</option>
+<option value="1">Đúng B</option>
+<option value="2">Đúng C</option>
+<option value="3">Đúng D</option>
+</select>
+
+<button onclick="addQuestion()">➕ Lưu câu hỏi</button>
+<button onclick="loadList()">📄 Xem câu hỏi</button>
 
 <hr>
 <h3>📊 Điểm học sinh</h3>
 <select id="scoreSubject">
-<option value="toan">📘 Toán</option>
-<option value="nguvan">📕 Ngữ Văn</option>
-<option value="hoa">📗 Hóa</option>
-<option value="sinh">📙 Sinh</option>
-<option value="su">📓 Sử</option>
-<option value="dia">📔 Địa</option>
-<option value="vatly">📒 Vật Lý</option>
+<option value="toan">Toán</option>
+<option value="nguvan">Ngữ văn</option>
+<option value="hoa">Hóa</option>
+<option value="sinh">Sinh</option>
+<option value="su">Sử</option>
+<option value="dia">Địa</option>
+<option value="vatly">Vật lý</option>
 </select>
 <button onclick="loadScores()">Xem điểm</button>
 <div id="scores"></div>
 
-<button onclick="backMenu()">⬅ Quay lại MENU</button>
+<button onclick="backMenu()">⬅ Quay lại</button>
 <div id="list"></div>
 </div>
 
 <!-- HỌC SINH -->
 <div class="box hidden" id="student">
 <header>📘 LÀM BÀI</header>
-<input id="studentName" placeholder="Nhập tên học sinh">
+<input id="studentName" placeholder="Nhập tên">
 <select id="subChoose">
-<option value="toan">📘 Toán</option>
-<option value="nguvan">📕 Ngữ Văn</option>
-<option value="hoa">📗 Hóa</option>
-<option value="sinh">📙 Sinh</option>
-<option value="su">📓 Sử</option>
-<option value="dia">📔 Địa</option>
-<option value="vatly">📒 Vật Lý</option>
+<option value="toan">Toán</option>
+<option value="nguvan">Ngữ văn</option>
+<option value="hoa">Hóa</option>
+<option value="sinh">Sinh</option>
+<option value="su">Sử</option>
+<option value="dia">Địa</option>
+<option value="vatly">Vật lý</option>
 </select>
 <button onclick="startQuiz()">▶ Bắt đầu</button>
+
 <div class="progress"><div class="bar" id="bar"></div></div>
 <div id="quiz"></div>
 <button onclick="next()" id="nextBtn">Tiếp theo</button>
 <div id="result"></div>
-<button class="hidden" id="backStudent" onclick="backMenu()">⬅ Quay lại MENU</button>
+<button class="hidden" id="backStudent" onclick="backMenu()">⬅ Quay lại</button>
 </div>
 
-<!-- Âm thanh mới -->
 <audio id="ting" src="https://freesound.org/data/previews/341/341695_6261545-lq.mp3"></audio>
 <audio id="wrong" src="https://freesound.org/data/previews/456/456618_7037-lq.mp3"></audio>
 
 <script>
-const teacherPwd="123456"; 
-let questions=[],i=0,score=0,selected=-1;
-let studentName="";
+const teacherPwd="123456";
+let questions=[],i=0,score=0,selected=-1,studentName="";
 
-// ===== MENU =====
 function backMenu(){
-    menu.classList.remove("hidden");
-    login.classList.add("hidden");
-    teacher.classList.add("hidden");
-    student.classList.add("hidden");
-    document.getElementById("result").innerHTML="";
-    document.getElementById("quiz").innerHTML="";
-    document.getElementById("bar").style.width="0%";
-    document.getElementById("backStudent").classList.add("hidden");
-    document.getElementById("nextBtn").classList.remove("hidden");
+menu.classList.remove("hidden");
+login.classList.add("hidden");
+teacher.classList.add("hidden");
+student.classList.add("hidden");
 }
 
-// ===== GIÁO VIÊN =====
 function loginTeacher(){
-    menu.classList.add("hidden");
-    login.classList.remove("hidden");
+menu.classList.add("hidden");
+login.classList.remove("hidden");
 }
+
 function checkPwd(){
-    if(document.getElementById("pwd").value===teacherPwd){
-        login.classList.add("hidden");
-        teacher.classList.remove("hidden");
-        document.getElementById("pwd").value="";
-    }else{
-        alert("Sai mật khẩu!");
-    }
+if(pwd.value===teacherPwd){
+login.classList.add("hidden");
+teacher.classList.remove("hidden");
+}else alert("Sai mật khẩu");
 }
 
 function getData(){
-    let sub=document.getElementById("subject").value;
-    return JSON.parse(localStorage.getItem("quiz_"+sub)||"[]");
+return JSON.parse(localStorage.getItem("quiz_"+subject.value)||"[]");
 }
-function saveData(data){
-    let sub=document.getElementById("subject").value;
-    localStorage.setItem("quiz_"+sub,JSON.stringify(data));
-    // lưu giới hạn 1 lần nếu tick
-    if(document.getElementById("limitOnce").checked){
-        localStorage.setItem("limit_"+sub,"true");
-    } else {
-        localStorage.removeItem("limit_"+sub);
-    }
+function saveData(d){
+localStorage.setItem("quiz_"+subject.value,JSON.stringify(d));
 }
 
 function addQuestion(){
-    let data=getData();
-    let qVal=document.getElementById("q").value;
-    let a1Val=document.getElementById("a1").value;
-    let a2Val=document.getElementById("a2").value;
-    let a3Val=document.getElementById("a3").value;
-    let a4Val=document.getElementById("a4").value;
-    if(!qVal||!a1Val||!a2Val||!a3Val||!a4Val){alert("Vui lòng nhập đầy đủ!"); return;}
-    data.push({q:qVal,a:[a1Val,a2Val,a3Val,a4Val],c:parseInt(document.getElementById("correct").value)});
-    saveData(data);
-    alert("Đã lưu!");
-    document.getElementById("q").value=document.getElementById("a1").value=document.getElementById("a2").value=document.getElementById("a3").value=document.getElementById("a4").value="";
+let d=getData();
+d.push({q:q.value,a:[a1.value,a2.value,a3.value,a4.value],c:+correct.value});
+saveData(d);
+alert("Đã lưu");
 }
 
 function loadList(){
-    let data=getData();
-    let listDiv=document.getElementById("list");
-    listDiv.innerHTML="";
-    if(data.length===0){listDiv.innerHTML="Chưa có câu hỏi!"; return;}
-    data.forEach((x,index)=>{
-        let div=document.createElement("div");
-        div.className="list";
-        div.innerHTML=`<span>${index+1}. ${x.q}</span><button onclick="del(${index})">❌ Xoá</button>`;
-        listDiv.appendChild(div);
-    });
+let d=getData();
+list.innerHTML="";
+d.forEach((x,i)=>{
+list.innerHTML+=`<div class="list">${i+1}. ${x.q}
+<button onclick="del(${i})">❌</button></div>`;
+});
 }
 
-function del(index){
-    let data=getData();
-    data.splice(index,1);
-    saveData(data);
-    loadList();
+function del(i){
+let d=getData();
+d.splice(i,1);
+saveData(d);
+loadList();
 }
 
-// ===== IMPORT FILE JSON =====
-function importFile(){
-  const file=document.getElementById("fileInput").files[0];
-  if(!file){alert("Chọn file trước!"); return;}
-  const reader=new FileReader();
-  reader.onload=function(e){
-    try{
-      const data=JSON.parse(e.target.result);
-      if(!Array.isArray(data)) throw "File không hợp lệ";
-      let current=getData();
-      current=current.concat(data);
-      saveData(current);
-      alert("Import thành công "+data.length+" câu!");
-      loadList();
-    }catch(err){
-      alert("File không hợp lệ: "+err);
-    }
-  }
-  reader.readAsText(file);
-}
-
-// ===== XEM ĐIỂM =====
-function loadScores(){
-    let sub=document.getElementById("scoreSubject").value;
-    let scores=JSON.parse(localStorage.getItem("score_"+sub)||"[]");
-    let div=document.getElementById("scores");
-    if(scores.length===0){div.innerHTML="Chưa có học sinh nào làm bài."; return;}
-    scores.sort((a,b)=>new Date(b.date)-new Date(a.date));
-    let html="<table><tr><th>Tên</th><th>Điểm</th><th>Tổng</th><th>Ngày giờ</th></tr>";
-    scores.forEach(s=>{html+=`<tr><td>${s.name}</td><td>${s.score}</td><td>${s.total}</td><td>${s.date}</td></tr>`;});
-    html+="</table>";
-    div.innerHTML=html;
-}
-
-// ===== HỌC SINH =====
 function openStudent(){
-    menu.classList.add("hidden");
-    student.classList.remove("hidden");
-    document.getElementById("quiz").innerHTML="";
-    document.getElementById("result").innerHTML="";
+menu.classList.add("hidden");
+student.classList.remove("hidden");
 }
 
 function startQuiz(){
-    studentName=document.getElementById("studentName").value.trim();
-    if(studentName===""){alert("Nhập tên học sinh trước!"); return;}
-    let sub=document.getElementById("subChoose").value;
-
-    // kiểm tra giới hạn 1 lần
-    if(localStorage.getItem("limit_"+sub) && localStorage.getItem("done_"+sub)){
-        alert("Bạn chỉ được làm môn này 1 lần trên thiết bị này!");
-        return;
-    }
-
-    questions=JSON.parse(localStorage.getItem("quiz_"+sub)||"[]");
-    if(questions.length===0){alert("Chưa có đề!"); return;}
-    i=0;score=0;selected=-1;
-    document.getElementById("backStudent").classList.add("hidden");
-    document.getElementById("nextBtn").classList.remove("hidden");
-    loadQ();
+studentName=studentNameInput.value||studentName.value;
+questions=JSON.parse(localStorage.getItem("quiz_"+subChoose.value)||"[]");
+i=0;score=0;
+loadQ();
 }
 
 function loadQ(){
-    let q=questions[i];
-    let quizDiv=document.getElementById("quiz");
-    quizDiv.innerHTML=`<b>Câu ${i+1}: ${q.q}</b>`;
-    q.a.forEach((x,j)=>{quizDiv.innerHTML+=`<div class="answer" onclick="choose(${j},this)">${x}</div>`;});
-    document.getElementById("bar").style.width=(i/questions.length*100)+"%";
+let q=questions[i];
+quiz.innerHTML=`<b>Câu ${i+1}: ${q.q}</b>`;
+q.a.forEach((x,j)=>{
+quiz.innerHTML+=`<div class="answer" onclick="choose(${j},this)">${x}</div>`;
+});
+bar.style.width=(i/questions.length*100)+"%";
 }
 
-function choose(j,el){
-    selected=j;
-    document.querySelectorAll(".answer").forEach(e=>e.classList.remove("active"));
-    el.classList.add("active");
+function choose(j,e){
+selected=j;
+document.querySelectorAll(".answer").forEach(x=>x.classList.remove("active"));
+e.classList.add("active");
 }
 
 function next(){
-    if(selected===-1){alert("Chọn đáp án!"); return;}
-    let q=questions[i];
-    let ans=document.querySelectorAll(".answer");
-    if(selected===q.c){ans[selected].classList.add("correct"); document.getElementById("ting").play(); score++;}
-    else{ans[selected].classList.add("wrong"); document.getElementById("wrong").play();}
-    setTimeout(()=>{
-        i++; selected=-1;
-        if(i<questions.length) loadQ();
-        else{
-            document.getElementById("quiz").innerHTML="";
-            document.getElementById("result").innerHTML=`🎉 Hoàn thành<br>Điểm: <b>${score}/${questions.length}</b>`;
-            document.getElementById("backStudent").classList.remove("hidden");
-            document.getElementById("nextBtn").classList.add("hidden");
-            document.getElementById("bar").style.width="100%";
-            saveStudentScore();
-        }
-    },600);
+let q=questions[i];
+if(selected==q.c){score++;ting.play();}
+else wrong.play();
+i++;
+if(i<questions.length) loadQ();
+else{
+quiz.innerHTML="";
+result.innerHTML=`🎉 Hoàn thành<br>Điểm: <b>${score}/${questions.length}</b>`;
+}
 }
 
-function saveStudentScore(){
-    let sub=document.getElementById("subChoose").value;
-    let scores=JSON.parse(localStorage.getItem("score_"+sub)||"[]");
-    let now=new Date();
-    scores.push({name:studentName,score:score,total:questions.length,date:now.toLocaleString()});
-    localStorage.setItem("score_"+sub,JSON.stringify(scores));
-
-    // đánh dấu đã làm nếu giới hạn 1 lần
-    if(localStorage.getItem("limit_"+sub)){
-        localStorage.setItem("done_"+sub,"true");
-    }
+function loadScores(){
+let s=JSON.parse(localStorage.getItem("score_"+scoreSubject.value)||"[]");
+let html="<table><tr><th>Tên</th><th>Điểm</th></tr>";
+s.forEach(x=>html+=`<tr><td>${x.name}</td><td>${x.score}</td></tr>`);
+scores.innerHTML=html+"</table>";
 }
 </script>
 </body>
