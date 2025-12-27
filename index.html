@@ -3,56 +3,55 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Hệ Thống Trắc Nghiệm Full</title>
+<title>Hệ Thống Trắc Nghiệm</title>
+
 <style>
-body{margin:0;font-family:Arial,sans-serif;background: linear-gradient(135deg,#2196f3,#00bcd4);color:#333;}
-.box{max-width:900px;margin:20px auto;background:white;padding:20px;border-radius:12px;box-shadow:0 6px 20px rgba(0,0,0,0.3);}
-h2{text-align:center;color:#1565c0}
-button{width:100%;padding:12px;border:none;border-radius:8px;background:#1e88e5;color:white;font-size:16px;margin:6px 0}
+body{margin:0;font-family:Arial;background:linear-gradient(135deg,#2196f3,#00bcd4)}
+.box{max-width:900px;margin:20px auto;background:#fff;padding:20px;border-radius:12px}
+button{width:100%;padding:12px;border:none;border-radius:8px;background:#1e88e5;color:white;margin:5px 0}
 button:hover{background:#1565c0}
 input,select{width:100%;padding:8px;margin:5px 0;border-radius:6px;border:1px solid #ccc}
 .answer{border:1px solid #ccc;padding:10px;margin:6px 0;border-radius:6px;cursor:pointer}
 .answer:hover{background:#e3f2fd}
 .correct{background:#43a047;color:white}
 .wrong{background:#e53935;color:white}
-.progress{height:10px;background:#ddd;border-radius:6px;overflow:hidden;margin:10px 0}
-.bar{height:100%;background:#1e88e5;width:0%}
 .hidden{display:none}
-.list{background:#f5f5f5;padding:8px;margin:6px 0;border-radius:6px;display:flex;justify-content:space-between}
-header{text-align:center;font-weight:bold;margin-bottom:10px}
+.progress{height:10px;background:#ddd;border-radius:6px;margin:10px 0}
+.bar{height:100%;background:#1e88e5;width:0%}
 table{width:100%;border-collapse:collapse}
-td,th{border:1px solid #ccc;padding:6px}
+th,td{border:1px solid #ccc;padding:6px}
 th{background:#1e88e5;color:white}
 </style>
 </head>
+
 <body>
 
 <!-- MENU -->
 <div class="box" id="menu">
-<header>📘 HỆ THỐNG TRẮC NGHIỆM</header>
-<button onclick="loginTeacher()">🧑‍🏫 GIÁO VIÊN</button>
-<button onclick="openStudent()">👨‍🎓 HỌC SINH</button>
+<h2>📘 HỆ THỐNG TRẮC NGHIỆM</h2>
+<button onclick="loginTeacher()">👨‍🏫 Giáo viên</button>
+<button onclick="openStudent()">👨‍🎓 Học sinh</button>
 </div>
 
 <!-- LOGIN -->
 <div class="box hidden" id="login">
-<input type="password" id="pwd" placeholder="Mật khẩu giáo viên">
+<input id="pwd" type="password" placeholder="Mật khẩu giáo viên">
 <button onclick="checkPwd()">Đăng nhập</button>
 <button onclick="backMenu()">⬅ Quay lại</button>
 </div>
 
 <!-- GIÁO VIÊN -->
 <div class="box hidden" id="teacher">
-<header>🧑‍🏫 QUẢN LÝ CÂU HỎI</header>
+<h3>🧑‍🏫 Quản lý câu hỏi</h3>
 
 <select id="subject">
 <option value="toan">Toán</option>
-<option value="nguvan">Ngữ văn</option>
+<option value="van">Ngữ Văn</option>
+<option value="anh">Tiếng Anh</option>
+<option value="ly">Vật Lý</option>
 <option value="hoa">Hóa</option>
 <option value="sinh">Sinh</option>
-<option value="su">Sử</option>
-<option value="dia">Địa</option>
-<option value="vatly">Vật lý</option>
+<option value="su">Lịch Sử</option>
 </select>
 
 <input id="q" placeholder="Câu hỏi">
@@ -68,55 +67,44 @@ th{background:#1e88e5;color:white}
 <option value="3">Đúng D</option>
 </select>
 
-<button onclick="addQuestion()">➕ Lưu câu hỏi</button>
+<button onclick="addQuestion()">➕ Thêm câu hỏi</button>
 <button onclick="loadList()">📄 Xem câu hỏi</button>
 
+<div id="list"></div>
+
 <hr>
-<h3>📊 Điểm học sinh</h3>
-<select id="scoreSubject">
-<option value="toan">Toán</option>
-<option value="nguvan">Ngữ văn</option>
-<option value="hoa">Hóa</option>
-<option value="sinh">Sinh</option>
-<option value="su">Sử</option>
-<option value="dia">Địa</option>
-<option value="vatly">Vật lý</option>
-</select>
-<button onclick="loadScores()">Xem điểm</button>
+<h3>📊 Kết quả học sinh</h3>
+<button onclick="loadScores()">Xem kết quả</button>
 <div id="scores"></div>
 
 <button onclick="backMenu()">⬅ Quay lại</button>
-<div id="list"></div>
 </div>
 
 <!-- HỌC SINH -->
 <div class="box hidden" id="student">
-<header>📘 LÀM BÀI</header>
+<h3>📘 Làm bài</h3>
 <input id="studentName" placeholder="Nhập tên">
 <select id="subChoose">
 <option value="toan">Toán</option>
-<option value="nguvan">Ngữ văn</option>
+<option value="van">Ngữ Văn</option>
+<option value="anh">Tiếng Anh</option>
+<option value="ly">Vật Lý</option>
 <option value="hoa">Hóa</option>
 <option value="sinh">Sinh</option>
-<option value="su">Sử</option>
-<option value="dia">Địa</option>
-<option value="vatly">Vật lý</option>
+<option value="su">Lịch Sử</option>
 </select>
+
 <button onclick="startQuiz()">▶ Bắt đầu</button>
 
 <div class="progress"><div class="bar" id="bar"></div></div>
 <div id="quiz"></div>
-<button onclick="next()" id="nextBtn">Tiếp theo</button>
+<button onclick="next()">Tiếp theo</button>
 <div id="result"></div>
-<button class="hidden" id="backStudent" onclick="backMenu()">⬅ Quay lại</button>
 </div>
 
-<audio id="ting" src="https://freesound.org/data/previews/341/341695_6261545-lq.mp3"></audio>
-<audio id="wrong" src="https://freesound.org/data/previews/456/456618_7037-lq.mp3"></audio>
-
 <script>
-const teacherPwd="123456";
-let questions=[],i=0,score=0,selected=-1,studentName="";
+const teacherPwd="14032008";
+let questions=[],i=0,score=0,selected=-1;
 
 function backMenu(){
 menu.classList.remove("hidden");
@@ -134,7 +122,7 @@ function checkPwd(){
 if(pwd.value===teacherPwd){
 login.classList.add("hidden");
 teacher.classList.remove("hidden");
-}else alert("Sai mật khẩu");
+}else alert("Sai mật khẩu!");
 }
 
 function getData(){
@@ -148,23 +136,15 @@ function addQuestion(){
 let d=getData();
 d.push({q:q.value,a:[a1.value,a2.value,a3.value,a4.value],c:+correct.value});
 saveData(d);
-alert("Đã lưu");
+alert("Đã lưu câu hỏi");
 }
 
 function loadList(){
 let d=getData();
 list.innerHTML="";
 d.forEach((x,i)=>{
-list.innerHTML+=`<div class="list">${i+1}. ${x.q}
-<button onclick="del(${i})">❌</button></div>`;
+list.innerHTML+=`<div>${i+1}. ${x.q}</div>`;
 });
-}
-
-function del(i){
-let d=getData();
-d.splice(i,1);
-saveData(d);
-loadList();
 }
 
 function openStudent(){
@@ -173,8 +153,10 @@ student.classList.remove("hidden");
 }
 
 function startQuiz(){
-studentName=studentNameInput.value||studentName.value;
+let name=studentName.value;
+if(!name){alert("Nhập tên");return;}
 questions=JSON.parse(localStorage.getItem("quiz_"+subChoose.value)||"[]");
+if(!questions.length){alert("Chưa có câu hỏi");return;}
 i=0;score=0;
 loadQ();
 }
@@ -190,26 +172,35 @@ bar.style.width=(i/questions.length*100)+"%";
 
 function choose(j,e){
 selected=j;
-document.querySelectorAll(".answer").forEach(x=>x.classList.remove("active"));
-e.classList.add("active");
+document.querySelectorAll(".answer").forEach(x=>x.classList.remove("correct","wrong"));
+if(j==questions[i].c) e.classList.add("correct");
+else e.classList.add("wrong");
 }
 
 function next(){
-let q=questions[i];
-if(selected==q.c){score++;ting.play();}
-else wrong.play();
+if(selected==questions[i].c) score++;
 i++;
 if(i<questions.length) loadQ();
 else{
+let data=JSON.parse(localStorage.getItem("scores")||"[]");
+data.push({
+name:studentName.value,
+subject:subChoose.value,
+score:score,
+date:new Date().toLocaleString()
+});
+localStorage.setItem("scores",JSON.stringify(data));
 quiz.innerHTML="";
-result.innerHTML=`🎉 Hoàn thành<br>Điểm: <b>${score}/${questions.length}</b>`;
+result.innerHTML=`🎉 Hoàn thành<br>Điểm: ${score}/${questions.length}`;
 }
 }
 
 function loadScores(){
-let s=JSON.parse(localStorage.getItem("score_"+scoreSubject.value)||"[]");
-let html="<table><tr><th>Tên</th><th>Điểm</th></tr>";
-s.forEach(x=>html+=`<tr><td>${x.name}</td><td>${x.score}</td></tr>`);
+let d=JSON.parse(localStorage.getItem("scores")||"[]");
+let html="<table><tr><th>Tên</th><th>Môn</th><th>Điểm</th><th>Ngày</th></tr>";
+d.forEach(x=>{
+html+=`<tr><td>${x.name}</td><td>${x.subject}</td><td>${x.score}</td><td>${x.date}</td></tr>`;
+});
 scores.innerHTML=html+"</table>";
 }
 </script>
