@@ -7,28 +7,33 @@
 
 <style>
 body{
-    font-family: Arial;
-    background: linear-gradient(135deg,#2196f3,#00bcd4);
     margin:0;
+    font-family:Arial;
+    background:linear-gradient(135deg,#2196f3,#00bcd4);
 }
 .box{
-    max-width:800px;
+    max-width:850px;
     margin:20px auto;
-    background:white;
+    background:#fff;
     padding:20px;
-    border-radius:14px;
+    border-radius:12px;
     box-shadow:0 4px 15px rgba(0,0,0,.3);
 }
 h2{text-align:center;color:#1565c0}
 button{
     width:100%;
     padding:12px;
-    margin-top:10px;
-    background:#1e88e5;
-    color:white;
     border:none;
     border-radius:8px;
+    background:#1e88e5;
+    color:white;
     font-size:16px;
+    margin-top:8px;
+}
+input,select{
+    width:100%;
+    padding:8px;
+    margin:5px 0;
 }
 .answer{
     border:1px solid #ccc;
@@ -41,42 +46,65 @@ button{
 .correct{background:#43a047;color:white}
 .wrong{background:#e53935;color:white}
 .progress{height:8px;background:#ddd;border-radius:6px;overflow:hidden}
-.bar{height:100%;width:0%;background:#1e88e5}
-textarea,input{width:100%;padding:8px;margin:5px 0}
+.bar{height:100%;background:#1e88e5;width:0%}
 .hidden{display:none}
+.list{background:#f5f5f5;padding:8px;margin:6px 0;border-radius:6px}
 </style>
 </head>
 
 <body>
 
-<div class="box" id="home">
+<!-- MENU -->
+<div class="box" id="menu">
 <h2>📘 HỆ THỐNG TRẮC NGHIỆM</h2>
+<button onclick="openTeacher()">🧑‍🏫 GIÁO VIÊN</button>
 <button onclick="openStudent()">👨‍🎓 HỌC SINH</button>
-<button onclick="openTeacher()">🧑‍🏫 NƠI SOẠN ĐỀ</button>
 </div>
 
-<!-- SOẠN ĐỀ -->
+<!-- GIÁO VIÊN -->
 <div class="box hidden" id="teacher">
 <h2>🧑‍🏫 SOẠN ĐỀ</h2>
+
+<select id="subject">
+<option value="dia">📘 Địa Lí</option>
+<option value="su">📕 Lịch Sử</option>
+<option value="sinh">📗 Sinh Học</option>
+<option value="hoa">📙 Hóa Học</option>
+</select>
+
 <input id="q" placeholder="Nhập câu hỏi">
 <input id="a1" placeholder="Đáp án A">
 <input id="a2" placeholder="Đáp án B">
 <input id="a3" placeholder="Đáp án C">
 <input id="a4" placeholder="Đáp án D">
+
 <select id="correct">
-<option value="0">Đáp án đúng: A</option>
-<option value="1">Đáp án đúng: B</option>
-<option value="2">Đáp án đúng: C</option>
-<option value="3">Đáp án đúng: D</option>
+<option value="0">Đúng: A</option>
+<option value="1">Đúng: B</option>
+<option value="2">Đúng: C</option>
+<option value="3">Đúng: D</option>
 </select>
-<button onclick="saveQuestion()">➕ Lưu câu hỏi</button>
+
+<button onclick="addQuestion()">➕ Lưu câu hỏi</button>
+<button onclick="loadList()">📄 Xem / Xoá câu hỏi</button>
 <button onclick="back()">⬅ Quay lại</button>
-<div id="count"></div>
+
+<div id="list"></div>
 </div>
 
 <!-- HỌC SINH -->
 <div class="box hidden" id="student">
-<h2>📘 BÀI KIỂM TRA</h2>
+<h2>📘 LÀM BÀI</h2>
+
+<select id="subChoose">
+<option value="dia">📘 Địa Lí</option>
+<option value="su">📕 Lịch Sử</option>
+<option value="sinh">📗 Sinh Học</option>
+<option value="hoa">📙 Hóa Học</option>
+</select>
+
+<button onclick="startQuiz()">▶ Bắt đầu</button>
+
 <div class="progress"><div class="bar" id="bar"></div></div>
 <div id="quiz"></div>
 <button onclick="next()">Tiếp theo</button>
@@ -87,50 +115,77 @@ textarea,input{width:100%;padding:8px;margin:5px 0}
 <audio id="wrong" src="https://www.soundjay.com/buttons/sounds/button-10.mp3"></audio>
 
 <script>
-let questions = JSON.parse(localStorage.getItem("questions")||"[]");
-let i=0,score=0,selected=-1;
+let questions=[],i=0,score=0,selected=-1;
 
 function openTeacher(){
- home.style.display="none";
+ menu.classList.add("hidden");
  teacher.classList.remove("hidden");
- updateCount();
 }
 
 function openStudent(){
- if(questions.length==0){alert("Chưa có đề!");return;}
- home.style.display="none";
+ menu.classList.add("hidden");
  student.classList.remove("hidden");
- load();
 }
 
-function back(){
- location.reload();
+function back(){location.reload();}
+
+// ==== GIÁO VIÊN ====
+function getData(){
+ let sub=document.getElementById("subject").value;
+ return JSON.parse(localStorage.getItem("quiz_"+sub)||"[]");
 }
 
-function saveQuestion(){
- let q={
+function saveData(data){
+ let sub=document.getElementById("subject").value;
+ localStorage.setItem("quiz_"+sub,JSON.stringify(data));
+}
+
+function addQuestion(){
+ let data=getData();
+ data.push({
    q:q.value,
    a:[a1.value,a2.value,a3.value,a4.value],
-   correct:parseInt(correct.value)
- };
- questions.push(q);
- localStorage.setItem("questions",JSON.stringify(questions));
- alert("Đã lưu câu hỏi!");
- q.value=a1.value=a2.value=a3.value=a4.value="";
- updateCount();
-}
-
-function updateCount(){
- count.innerHTML="📌 Tổng câu: "+questions.length;
-}
-
-function load(){
- let q=questions[i];
- let html=`<b>Câu ${i+1}: ${q.q}</b>`;
- q.a.forEach((x,j)=>{
-   html+=`<div class="answer" onclick="choose(${j},this)">${x}</div>`;
+   c:parseInt(correct.value)
  });
- quiz.innerHTML=html;
+ saveData(data);
+ alert("Đã lưu!");
+ q.value=a1.value=a2.value=a3.value=a4.value="";
+}
+
+function loadList(){
+ let data=getData();
+ list.innerHTML="";
+ data.forEach((x,i)=>{
+   list.innerHTML+=`
+   <div class="list">
+   ${i+1}. ${x.q}
+   <button onclick="del(${i})">❌ Xoá</button>
+   </div>`;
+ });
+}
+
+function del(i){
+ let data=getData();
+ data.splice(i,1);
+ saveData(data);
+ loadList();
+}
+
+// ==== HỌC SINH ====
+function startQuiz(){
+ let sub=subChoose.value;
+ questions=JSON.parse(localStorage.getItem("quiz_"+sub)||"[]");
+ if(questions.length==0){alert("Chưa có đề!");return;}
+ i=0;score=0;
+ loadQ();
+}
+
+function loadQ(){
+ let q=questions[i];
+ quiz.innerHTML=`<b>Câu ${i+1}: ${q.q}</b>`;
+ q.a.forEach((x,j)=>{
+   quiz.innerHTML+=`<div class="answer" onclick="choose(${j},this)">${x}</div>`;
+ });
  bar.style.width=(i/questions.length*100)+"%";
 }
 
@@ -143,24 +198,20 @@ function choose(j,el){
 function next(){
  if(selected==-1){alert("Chọn đáp án");return;}
  let q=questions[i];
- let answers=document.querySelectorAll(".answer");
- if(selected==q.correct){
-   answers[selected].classList.add("correct");
-   ting.play(); score++;
+ let ans=document.querySelectorAll(".answer");
+ if(selected==q.c){
+   ans[selected].classList.add("correct");
+   ting.play();score++;
  }else{
-   answers[selected].classList.add("wrong");
+   ans[selected].classList.add("wrong");
    wrong.play();
  }
  setTimeout(()=>{
-   i++; selected=-1;
-   if(i<questions.length) load();
-   else{
-     quiz.innerHTML="";
-     result.innerHTML=`🎉 Hoàn thành<br>Điểm: <b>${score}/${questions.length}</b>`;
-   }
+   i++;selected=-1;
+   if(i<questions.length) loadQ();
+   else quiz.innerHTML=`🎉 Hoàn thành<br>Điểm: <b>${score}/${questions.length}</b>`;
  },600);
 }
 </script>
 </body>
 </html>
-
