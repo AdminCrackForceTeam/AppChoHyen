@@ -2,194 +2,257 @@
 <html lang="vi">
 <head>
 <meta charset="UTF-8">
-<title>⚡ PRO SOFTWARE SYSTEM ⚡</title>
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>TedExe Clone UI</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <style>
-body{margin:0;background:#000;color:#0ff;font-family:Arial}
+:root{
+--bg:#0b1020;
+--sidebar:#070b18;
+--card:#0f172a;
+--border:#1e293b;
+--primary:#6366f1;
+--text:#e5e7eb;
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:Segoe UI;background:var(--bg);color:var(--text)}
+.wrapper{display:flex;height:100vh}
+
+/* SIDEBAR */
+.sidebar{
+width:240px;background:var(--sidebar);
+border-right:1px solid var(--border);
+padding:20px
+}
+.logo{
+text-align:center;font-size:22px;
+font-weight:900;color:var(--primary);
+cursor:pointer
+}
+.nav a{
+display:block;padding:12px;
+border-radius:8px;color:#cbd5f5;
+text-decoration:none;margin:6px 0
+}
+.nav a:hover{background:var(--primary);color:#000}
+
+/* MAIN */
+.main{flex:1;padding:20px;overflow:auto}
+.header{display:flex;justify-content:space-between;align-items:center;margin-bottom:15px}
+.card{
+background:var(--card);
+border:1px solid var(--border);
+border-radius:14px;
+padding:15px
+}
+.grid{
+display:grid;
+grid-template-columns:repeat(auto-fill,minmax(250px,1fr));
+gap:15px
+}
+.btn{
+padding:10px 14px;
+border-radius:10px;
+border:none;
+font-weight:bold;
+cursor:pointer
+}
+.btn-primary{background:var(--primary)}
+.btn-danger{background:#ef4444}
+input,textarea{
+width:100%;padding:10px;
+border-radius:10px;
+background:#020617;
+border:1px solid var(--border);
+color:#fff;margin:6px 0
+}
 .hidden{display:none}
-h2,h3{color:#0ff}
-input,select{width:100%;padding:10px;margin:5px 0;background:#000;color:#0ff;border:1px solid #0ff}
-button{padding:10px 15px;margin:5px;border:none;cursor:pointer;background:#0ff;color:#000;font-weight:bold}
-nav button{margin:5px}
-.card{border:1px solid #0ff;padding:15px;margin:10px;border-radius:8px}
-.popup{position:fixed;bottom:20px;right:20px;background:#111;padding:15px;border:1px solid #0ff;animation:float 2s infinite}
-@keyframes float{0%{transform:translateY(0)}50%{transform:translateY(-5px)}100%{transform:translateY(0)}}
+.price{color:#22c55e;font-weight:bold}
 </style>
 </head>
-
 <body>
 
-<h2 style="text-align:center">⚡ PRO SOFTWARE SYSTEM ⚡</h2>
+<div class="wrapper">
 
-<!-- POPUP KHUYẾN MÃI -->
-<div class="popup" id="promo">🎁 Khuyến mãi 20% cho user mới!</div>
-
-<!-- LOGIN -->
-<div id="auth" class="card">
-<h3>LOGIN / REGISTER</h3>
-<input id="user" placeholder="Username">
-<input id="pass" type="password" placeholder="Password">
-<button onclick="login()">LOGIN</button>
-<button onclick="register()">REGISTER</button>
+<!-- SIDEBAR -->
+<div class="sidebar">
+<div class="logo" onclick="secretTap()">TED EXE</div>
+<div class="nav">
+<a onclick="show('shop')"><i class="fa fa-store"></i> Shop</a>
+<a onclick="show('deposit')"><i class="fa fa-qrcode"></i> Nạp tiền</a>
+<a onclick="logout()"><i class="fa fa-sign-out"></i> Thoát</a>
+</div>
 </div>
 
-<!-- USER APP -->
-<div id="userApp" class="hidden">
-<nav>
-<button onclick="show('shop')">SHOP</button>
-<button onclick="show('wallet')">NẠP TIỀN</button>
-<button onclick="show('orders')">ĐÃ MUA</button>
-<button onclick="logout()">LOGOUT</button>
-</nav>
+<!-- MAIN -->
+<div class="main">
 
-<div id="info" class="card"></div>
+<div class="header">
+<h2 id="title">SHOP</h2>
+<div id="info"></div>
+</div>
 
-<div id="shop"></div>
-<div id="wallet" class="hidden card"></div>
-<div id="orders" class="hidden"></div>
+<!-- LOGIN -->
+<div class="card" id="loginBox">
+<h3>Đăng nhập / Đăng ký</h3>
+<input id="u" placeholder="Username">
+<input id="p" type="password" placeholder="Password">
+<button class="btn btn-primary" onclick="login()">Vào Shop</button>
+</div>
+
+<!-- SHOP -->
+<div id="shop" class="hidden">
+<div class="grid" id="products"></div>
+</div>
+
+<!-- DEPOSIT -->
+<div id="deposit" class="hidden">
+<div class="card">
+<h3>Nạp tiền</h3>
+<img id="qr" style="max-width:200px"><br><br>
+Nội dung CK: <b id="ck"></b>
+<input id="amount" placeholder="Số tiền">
+<button class="btn btn-primary" onclick="sendDeposit()">Gửi yêu cầu</button>
+</div>
 </div>
 
 <!-- ADMIN -->
-<div id="adminApp" class="hidden card">
-<h3>ADMIN PANEL</h3>
+<div id="admin" class="hidden">
 
-<h4>QR NẠP TIỀN</h4>
-<input id="qrInput" placeholder="Link ảnh QR">
-<button onclick="saveQR()">LƯU QR</button>
+<div class="card">
+<h3>Thêm sản phẩm</h3>
+<input id="pn" placeholder="Tên">
+<textarea id="pd" placeholder="Mô tả"></textarea>
+<input id="pp" placeholder="Giá">
+<button class="btn btn-primary" onclick="addProduct()">Thêm</button>
+</div>
 
-<h4>CỘNG / TRỪ TIỀN USER</h4>
-<select id="userSelect"></select>
-<input id="moneyValue" type="number" placeholder="Nhập số tiền">
-<button onclick="addMoney()">+ TIỀN</button>
-<button onclick="subMoney()">- TIỀN</button>
+<div class="card">
+<h3>Quản lý user</h3>
+<div id="users"></div>
+</div>
 
-<h4>DANH SÁCH USER</h4>
-<div id="userList"></div>
+<div class="card">
+<h3>Duyệt nạp</h3>
+<div id="deposits"></div>
+</div>
+
+<div class="card">
+<h3>QR Nạp</h3>
+<input type="file" onchange="uploadQR(this)">
+<img id="qrAdmin" style="max-width:200px">
+</div>
+
+</div>
+
+</div>
 </div>
 
 <script>
-const ADMIN={u:"thanhdat08",p:"dat1234"};
-let users=JSON.parse(localStorage.users||"{}");
-let products=JSON.parse(localStorage.products||"[]");
+/* ==== DATA ==== */
+let users=JSON.parse(localStorage.users||"[]");
+let products=JSON.parse(localStorage.products||JSON.stringify([
+{name:"Nick Free Fire VIP",desc:"Rank Cao – Full Skin",price:150000},
+{name:"Nick Liên Quân",desc:"Tướng + Skin Hiếm",price:200000},
+{name:"Acc Valorant",desc:"Full Rank – Đổi Mail",price:350000},
+{name:"Nick PUBG",desc:"Trang phục xịn",price:180000},
+{name:"Nick CF",desc:"VIP Vĩnh Viễn",price:120000},
+{name:"Acc Genshin",desc:"5 Sao + Vũ Khí",price:500000},
+{name:"Nick Roblox",desc:"Robux lớn",price:90000},
+{name:"Nick LMHT",desc:"Rank Cao",price:250000},
+{name:"Acc Steam",desc:"Nhiều Game",price:400000},
+{name:"Nick Free Fire Random",desc:"Giá rẻ",price:50000}
+]));
+let deposits=JSON.parse(localStorage.deposits||"[]");
 let qr=localStorage.qr||"";
-let current=null;
+let me=null;
+let tap=0;
 
-if(products.length==0){
- products=[
-  {name:"VPN MobileConfig",price:50000,link:"#"},
-  {name:"FPS Booster",price:80000,link:"#"}
- ];
- localStorage.products=JSON.stringify(products);
+/* ==== UTILS ==== */
+function save(){
+localStorage.users=JSON.stringify(users);
+localStorage.products=JSON.stringify(products);
+localStorage.deposits=JSON.stringify(deposits);
+localStorage.qr=qr;
 }
 
+/* ==== LOGIN ==== */
 function login(){
- let u=user.value.trim(),p=pass.value.trim();
- if(!u||!p) return alert("NHẬP ĐẦY ĐỦ TK/MK");
- if(u==ADMIN.u && p==ADMIN.p){
-  auth.classList.add("hidden");
-  adminApp.classList.remove("hidden");
-  loadAdmin();
-  return;
- }
- if(!users[u]||users[u].pass!==p) return alert("SAI TK/MK");
- current=u;
- auth.classList.add("hidden");
- userApp.classList.remove("hidden");
- loadUser();
+let user=users.find(x=>x.u==u.value&&x.p==p.value);
+if(!user){
+user={u:u.value,p:p.value,m:0};
+users.push(user);
+}
+me=user;
+loginBox.classList.add("hidden");
+info.innerHTML=`${me.u} | ${me.m}đ`;
+ck.innerText=me.u;
+if(qr) document.getElementById("qr").src=qr;
+show("shop");render();
 }
 
-function register(){
- let u=user.value.trim(),p=pass.value.trim();
- if(!u||!p) return alert("NHẬP ĐẦY ĐỦ");
- if(users[u]) return alert("USER TỒN TẠI");
- users[u]={pass:p,balance:0,orders:[]};
- localStorage.users=JSON.stringify(users);
- alert("ĐĂNG KÝ OK");
+/* ==== SHOP ==== */
+function render(){
+productsDiv=products.map(p=>`
+<div class="card">
+<h4>${p.name}</h4>
+<p>${p.desc}</p>
+<div class="price">${p.price} đ</div><br>
+<button class="btn btn-primary" onclick="buy(${p.price})">Mua</button>
+</div>`).join("");
+products.innerHTML=productsDiv;
+
+/* admin */
+usersDiv=users.map(u=>`
+<div>${u.u} - ${u.m}đ
+<button onclick="u.m+=100000;save();render()">+100k</button>
+</div>`).join("");
+document.getElementById("users").innerHTML=usersDiv;
+
+depositsDiv=deposits.map((d,i)=>`
+<div>${d.u} - ${d.a}
+<button onclick="let u=users.find(x=>x.u==d.u);u.m+=+d.a;deposits.splice(${i},1);save();render()">Duyệt</button>
+</div>`).join("");
+document.getElementById("deposits").innerHTML=depositsDiv;
 }
 
+/* ==== ACTION ==== */
+function buy(p){
+if(me.m<p) return alert("Không đủ tiền");
+me.m-=p;save();render();
+}
+function sendDeposit(){
+deposits.push({u:me.u,a:amount.value});
+save();alert("Đã gửi");
+}
+function addProduct(){
+products.push({name:pn.value,desc:pd.value,price:+pp.value});
+save();render();
+}
+function uploadQR(i){
+let r=new FileReader();
+r.onload=e=>{qr=e.target.result;qrAdmin.src=qr;save();}
+r.readAsDataURL(i.files[0]);
+}
+function show(id){
+["shop","deposit","admin"].forEach(x=>document.getElementById(x).classList.add("hidden"));
+document.getElementById(id).classList.remove("hidden");
+title.innerText=id.toUpperCase();
+}
 function logout(){location.reload()}
 
-function show(id){
- shop.classList.add("hidden");
- wallet.classList.add("hidden");
- orders.classList.add("hidden");
- document.getElementById(id).classList.remove("hidden");
+/* ==== ADMIN SECRET ==== */
+function secretTap(){
+tap++;
+if(tap==5){
+let k=prompt("KEY ?");
+if(btoa(k)=="dGVkZXhlQGFkbWlu"){
+document.getElementById("admin").classList.remove("hidden");
+show("admin");
 }
-
-function loadUser(){
- info.innerHTML=`👤 ${current}<br>💰 Số dư: ${users[current].balance} VNĐ`;
- loadShop();loadWallet();loadOrders();
+tap=0;
 }
-
-function loadShop(){
- shop.innerHTML="";
- products.forEach((p,i)=>{
-  shop.innerHTML+=`
-  <div class="card">
-  <b>${p.name}</b><br>
-  Giá: ${p.price} VNĐ<br>
-  <button onclick="buy(${i})">MUA</button>
-  </div>`;
- });
-}
-
-function buy(i){
- let p=products[i];
- if(users[current].balance<p.price) return alert("KHÔNG ĐỦ TIỀN");
- users[current].balance-=p.price;
- users[current].orders.push(p);
- localStorage.users=JSON.stringify(users);
- loadUser();
-}
-
-function loadWallet(){
- wallet.innerHTML=`
- <h3>NẠP TIỀN</h3>
- <p>Nội dung chuyển khoản: <b>${current}</b></p>
- <img src="${qr}" width="200">
- `;
-}
-
-function loadOrders(){
- orders.innerHTML="";
- users[current].orders.forEach(o=>{
-  orders.innerHTML+=`
-  <div class="card">
-  ${o.name}<br>
-  <a href="${o.link}" download>DOWNLOAD</a>
-  </div>`;
- });
-}
-
-function loadAdmin(){
- userSelect.innerHTML="";
- userList.innerHTML="";
- for(let u in users){
-  userSelect.innerHTML+=`<option>${u}</option>`;
-  userList.innerHTML+=`👤 ${u} | 💰 ${users[u].balance}<br>`;
- }
-}
-
-function addMoney(){
- let u=userSelect.value,v=+moneyValue.value;
- if(!v) return alert("NHẬP TIỀN");
- users[u].balance+=v;
- localStorage.users=JSON.stringify(users);
- loadAdmin();
-}
-
-function subMoney(){
- let u=userSelect.value,v=+moneyValue.value;
- if(!v) return alert("NHẬP TIỀN");
- users[u].balance-=v;
- localStorage.users=JSON.stringify(users);
- loadAdmin();
-}
-
-function saveQR(){
- localStorage.qr=qrInput.value;
- alert("ĐÃ LƯU QR");
 }
 </script>
+
 </body>
 </html>
