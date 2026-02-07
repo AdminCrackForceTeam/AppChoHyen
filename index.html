@@ -424,7 +424,7 @@
 // ================== CÁC BIẾN VÀ HÀM CƠ BẢN ==================
 const loadingOverlay = document.getElementById("loadingOverlay");
 function showLoading() { loadingOverlay.style.opacity = "1"; loadingOverlay.style.visibility = "visible"; }
-function hideLoading() { setTimeout(() => { loadingOverlay.style.opacity = "0"; loadingOverlay.style.visibility = "hidden"; }, 500); }
+function hideLoading() { setTimeout(() => { loadingOverlay.style.opacity = "0"; loadingOverlay.style.visibility = "hidden"; }, 600); }
 
 function getStorage() {
   try { return localStorage; } catch(e) {
@@ -452,11 +452,22 @@ function isAdmin() {
   return currentUser && currentUser.u === "admin";
 }
 
+function saveAll() {
+  storage.setItem("users", JSON.stringify(users));
+  storage.setItem("products", JSON.stringify(products));
+  storage.setItem("notice", notice);
+  storage.setItem("qr", qr);
+  storage.setItem("qrNote", qrNote);
+  if (currentUser) {
+    storage.setItem("currentUser", JSON.stringify(currentUser));
+  }
+}
+
 // ================== RENDER CHÍNH ==================
 function render() {
   const topRight = document.getElementById("topRight");
   let html = currentUser 
-    ? `<span>${currentUser.u} • ${Number(currentUser.balance).toLocaleString('vi-VN')}đ</span>`
+    ? `<span>${currentUser.u} • ${Number(currentUser.balance || 0).toLocaleString('vi-VN')}đ</span>`
     : `<button onclick="openLogin()">Đăng nhập</button><button onclick="openRegister()">Đăng ký</button>`;
 
   if (isAdmin()) {
@@ -471,9 +482,9 @@ function render() {
   if(view === "shop") {
     if (currentUser) {
       products.forEach(p => {
-        if (Math.random() < 0.08) p.sold = (p.sold || 0) + Math.floor(Math.random() * 3 + 1);
+        if (Math.random() < 0.1) p.sold = (p.sold || 0) + Math.floor(Math.random() * 2 + 1);
       });
-      storage.setItem("products", JSON.stringify(products));
+      saveAll();
     }
 
     content.innerHTML = `
@@ -482,8 +493,8 @@ function render() {
         ${products.length ? products.map((p,i)=>`
           <div class="card">
             <h4>${p.name}</h4>
-            <div style="color:#fda4af;margin:10px 0;">${p.desc}</div>
-            <div class="price">${Number(p.price).toLocaleString('vi-VN')}đ</div>
+            <div style="color:#fda4af;margin:10px 0;">${p.desc || ''}</div>
+            <div class="price">${Number(p.price || 0).toLocaleString('vi-VN')}đ</div>
             <div class="sold">Đã có <strong>${Number(p.sold || 0).toLocaleString('vi-VN')}</strong> người mua</div>
             <div class="buy" onclick="buy(${i})">MUA NGAY</div>
           </div>
@@ -507,7 +518,7 @@ function render() {
       return;
     }
     let ordersHtml = "";
-    (currentUser.orders || []).forEach((order) => {
+    (currentUser.orders || []).forEach(order => {
       ordersHtml += `
         <div class="order-item">
           <div>
@@ -515,7 +526,7 @@ function render() {
             <span style="color:#fda4af;">Ngày: ${order.date}</span><br>
             <span style="color:${order.status === 'pending' ? '#fbbf24' : '#34d399'};font-weight:600;">Trạng thái: ${order.status === 'pending' ? 'Đợi duyệt' : 'Đã duyệt'}</span>
           </div>
-          ${order.status === 'approved' ? `<button class="approve-btn" onclick="showDetails('${order.details.replace(/'/g, "\\'")}')">Xem TK/MK</button>` : ''}
+          ${order.status === 'approved' && order.details ? `<button class="approve-btn" onclick="showDetails('${order.details.replace(/'/g, "\\'")}')">Xem TK/MK</button>` : ''}
         </div>
       `;
     });
@@ -529,103 +540,169 @@ function render() {
 }
 
 function showDetails(details) {
-  alert(`Chi tiết tài khoản/mật khẩu:\n\n${details}`);
+  alert(`Chi tiết tài khoản / mật khẩu:\n\n${details}`);
 }
 
-// ================== ADMIN PANEL ==================
-function openAdminPanel() {
-  const pass = prompt("Xác nhận mật khẩu Admin:");
-  if (pass === ADMIN_PASSWORD) {
-    document.getElementById("adminModal").classList.remove("hidden");
-    document.getElementById("n").value = notice;
-    document.getElementById("qn").value = qrNote;
-    renderUserList();
-    renderPendingOrders();
-    renderProductList();
-    document.getElementById("qrPreview").src = qr;
-  } else if (pass !== null) {
-    alert("Mật khẩu sai!");
+// ================== AUTH FUNCTIONS ==================
+function openLogin() { document.getElementById("loginModal").classList.remove("hidden"); }
+function openRegister() { document.getElementById("regModal").classList.remove("hidden"); }
+
+function login() {
+  const u = document.getElementById("lu").value.trim();
+  const p = document.getElementById("lp").value;
+  if (!u || !p) return alert("Nhập đầy đủ thông tin!");
+
+  const user = users.find(x => x.u === u && x.p === hash(p));
+  if (!user) return alert("Sai tên đăng nhập hoặc mật khẩu!");
+
+  currentUser = {...user}; // copy để tránh reference
+  storage.setItem("currentUser", JSON.stringify(currentUser));
+  document.getElementById("loginModal").classList.add("hidden");
+  render();
+  alert("Đăng nhập thành công!");
+}
+
+function register() {
+  const u = document.getElementById("ru").value.trim();
+  const p = document.getElementById("rp").value;
+
+  if (u.length < 4) return alert("Tên đăng nhập phải ≥ 4 ký tự");
+  if (p.length < 6) return alert("Mật khẩu phải ≥ 6 ký tự");
+  if (users.some(x => x.u === u)) return alert("Tên đăng nhập đã tồn tại!");
+
+  const newUser = { u, p: hash(p), balance: 0, orders: [] };
+  users.push(newUser);
+  currentUser = {...newUser};
+  saveAll();
+
+  document.getElementById("regModal").classList.add("hidden");
+  render();
+  alert("Đăng ký thành công! Bạn có thể đăng nhập ngay.");
+}
+
+function logout() {
+  if (!confirm("Bạn có chắc muốn đăng xuất?")) return;
+  currentUser = null;
+  storage.removeItem("currentUser");
+  render();
+  alert("Đã đăng xuất!");
+}
+
+// ================== BUY FUNCTION ==================
+function buy(index) {
+  if (!currentUser) return alert("Vui lòng đăng nhập để mua!");
+
+  const product = products[index];
+  if (!product) return alert("Sản phẩm không tồn tại!");
+
+  if (confirm(`Mua "${product.name}" với giá ${Number(product.price).toLocaleString('vi-VN')}đ ?`)) {
+    showLoading();
+    setTimeout(() => {
+      currentUser.orders = currentUser.orders || [];
+      currentUser.orders.push({
+        productName: product.name,
+        date: new Date().toLocaleString('vi-VN'),
+        status: 'pending'
+      });
+
+      const userIndex = users.findIndex(u => u.u === currentUser.u);
+      if (userIndex !== -1) users[userIndex] = {...currentUser};
+
+      saveAll();
+      render();
+      hideLoading();
+      alert("Đơn hàng đã được tạo! Chờ admin duyệt.");
+    }, 700);
   }
+}
+
+// ================== ADMIN FUNCTIONS ==================
+function openAdminPanel() {
+  const pass = prompt("Nhập mật khẩu Admin:");
+  if (pass !== ADMIN_PASSWORD) {
+    if (pass !== null) alert("Mật khẩu sai!");
+    return;
+  }
+
+  document.getElementById("adminModal").classList.remove("hidden");
+  document.getElementById("n").value = notice;
+  document.getElementById("qn").value = qrNote;
+  document.getElementById("qrPreview").src = qr;
+  renderUserList();
+  renderPendingOrders();
+  renderProductList();
 }
 
 function closeAdmin() {
   document.getElementById("adminModal").classList.add("hidden");
 }
 
-// ----- User -----
 function renderUserList() {
   const search = document.getElementById("userSearch").value.toLowerCase().trim();
   const list = document.getElementById("userList");
   let html = "";
 
-  const filteredUsers = users.filter((user, i) => {
-    if (user.u === "admin") return false;
-    return !search || user.u.toLowerCase().includes(search);
-  });
+  const filtered = users.filter(u => u.u !== "admin" && (!search || u.u.toLowerCase().includes(search)));
 
-  // Nếu không tìm kiếm -> chỉ hiện tối đa 5
-  const displayUsers = search ? filteredUsers : filteredUsers.slice(0, 5);
-
-  displayUsers.forEach((user) => {
-    const i = users.findIndex(u => u.u === user.u);
+  filtered.forEach((user) => {
+    const idx = users.findIndex(x => x.u === user.u);
     html += `
       <div class="user-list-item">
         <div>
           <strong style="color:#fecaca;font-size:1.25rem;">${user.u}</strong><br>
-          <span style="color:#fda4af;font-size:1.1rem;">Số dư: ${Number(user.balance).toLocaleString('vi-VN')}đ</span>
+          <span style="color:#fda4af;">Số dư: ${Number(user.balance || 0).toLocaleString('vi-VN')}đ</span>
         </div>
-        <div style="display:flex;gap:14px;flex-wrap:wrap;align-items:center;">
-          <input type="number" id="amount_${i}" placeholder="Số tiền" style="width:160px;font-size:1.1rem;">
-          <button class="action-btn" style="padding:12px 20px;font-size:1rem;" onclick="changeBalance(${i}, true)">+ Tiền</button>
-          <button class="action-btn" style="background:#991b1b;padding:12px 20px;font-size:1rem;" onclick="changeBalance(${i}, false)">- Tiền</button>
-          <button class="delete-btn" onclick="deleteUser(${i})">Xóa</button>
+        <div style="display:flex;gap:12px;flex-wrap:wrap;">
+          <input type="number" id="amt_${idx}" placeholder="Số tiền" style="width:140px;">
+          <button class="action-btn" onclick="changeBalance(${idx}, true)">+ Tiền</button>
+          <button class="action-btn" style="background:#991b1b;" onclick="changeBalance(${idx}, false)">- Tiền</button>
+          <button class="delete-btn" onclick="deleteUser(${idx})">Xóa</button>
         </div>
       </div>
     `;
   });
 
-  if (html === "") {
-    html = "<p style='text-align:center;color:#fda4af;font-size:1.2rem;padding:30px 0;'>Không tìm thấy user nào.</p>";
-  } else if (!search && filteredUsers.length > 5) {
-    html += `<p style='text-align:center;color:#fda4af;margin-top:20px;font-size:1.1rem;'>Hiển thị 5 user đầu tiên. Nhập tên để tìm thêm...</p>`;
-  }
-
-  list.innerHTML = html;
+  list.innerHTML = html || "<p style='text-align:center;color:#fda4af;padding:20px;'>Không tìm thấy user</p>";
 }
 
 function changeBalance(index, isAdd) {
-  const amountInput = document.getElementById(`amount_${index}`);
-  const amount = Number(amountInput.value);
-  if (!amount || amount <= 0) return alert("Vui lòng nhập số tiền hợp lệ!");
+  const input = document.getElementById(`amt_${index}`);
+  const amount = Number(input.value);
+  if (!amount || amount <= 0) return alert("Nhập số tiền hợp lệ!");
 
-  if (confirm(`Xác nhận ${isAdd ? "cộng" : "trừ"} ${amount.toLocaleString('vi-VN')}đ cho user này?`)) {
-    showLoading();
-    setTimeout(() => {
-      if (isAdd) users[index].balance += amount;
-      else users[index].balance = Math.max(0, users[index].balance - amount);
-      storage.setItem("users", JSON.stringify(users));
-      if (currentUser && currentUser.u === users[index].u) {
-        currentUser.balance = users[index].balance;
-        storage.setItem("currentUser", JSON.stringify(currentUser));
-      }
-      renderUserList();
-      render();
-      hideLoading();
-    }, 600);
-  }
+  if (!confirm(`Xác nhận ${isAdd ? 'cộng' : 'trừ'} ${amount.toLocaleString('vi-VN')}đ ?`)) return;
+
+  showLoading();
+  setTimeout(() => {
+    if (isAdd) users[index].balance += amount;
+    else users[index].balance = Math.max(0, (users[index].balance || 0) - amount);
+
+    if (currentUser && currentUser.u === users[index].u) {
+      currentUser.balance = users[index].balance;
+    }
+
+    saveAll();
+    renderUserList();
+    render();
+    hideLoading();
+  }, 600);
 }
 
 function deleteUser(index) {
-  if (confirm("Xóa người dùng này vĩnh viễn?")) {
-    showLoading();
-    setTimeout(() => {
-      if (users[index].u === currentUser?.u) logout();
-      users.splice(index, 1);
-      storage.setItem("users", JSON.stringify(users));
-      renderUserList();
-      hideLoading();
-    }, 600);
-  }
+  if (users[index].u === "admin") return alert("Không thể xóa tài khoản admin!");
+  if (!confirm("Xóa người dùng này vĩnh viễn?")) return;
+
+  showLoading();
+  setTimeout(() => {
+    if (currentUser && currentUser.u === users[index].u) {
+      logout();
+    }
+    users.splice(index, 1);
+    saveAll();
+    renderUserList();
+    render();
+    hideLoading();
+  }, 600);
 }
 
 function addNewUser() {
@@ -633,72 +710,150 @@ function addNewUser() {
   const pass = document.getElementById("newUserPass").value;
   const bal = Number(document.getElementById("newUserBalance").value) || 0;
 
-  if (!name || name.length < 4) return alert("Tên đăng nhập ≥ 4 ký tự");
-  if (!pass || pass.length < 6) return alert("Mật khẩu ≥ 6 ký tự");
-  if (users.some(u => u.u === name)) return alert("Tên đăng nhập đã tồn tại!");
+  if (name.length < 4) return alert("Tên ≥ 4 ký tự");
+  if (pass.length < 6) return alert("Mật khẩu ≥ 6 ký tự");
+  if (users.some(u => u.u === name)) return alert("Tên đã tồn tại!");
 
   showLoading();
   setTimeout(() => {
     users.push({ u: name, p: hash(pass), balance: bal, orders: [] });
-    storage.setItem("users", JSON.stringify(users));
+    saveAll();
     document.getElementById("newUserName").value = "";
     document.getElementById("newUserPass").value = "";
     document.getElementById("newUserBalance").value = "";
     renderUserList();
     hideLoading();
-    alert("Đã thêm user mới!");
-  }, 800);
+    alert("Đã thêm user!");
+  }, 700);
 }
 
-// Các hàm còn lại giữ nguyên như phiên bản trước (renderPendingOrders, approveOrder, renderProductList, updateSold, addNewProduct, deleteProduct, saveQR, saveNotice, register, login, logout, buy...)
-
 function renderPendingOrders() {
-  const list = document.getElementById("pendingOrders");
+  const container = document.getElementById("pendingOrders");
   let html = "";
-  users.forEach((user) => {
-    (user.orders || []).forEach((order, orderIndex) => {
+
+  users.forEach(user => {
+    (user.orders || []).forEach((order, ordIdx) => {
       if (order.status === 'pending') {
         html += `
           <div class="order-item">
             <div>
-              <strong style="color:#fecaca;font-size:1.25rem;">User: ${user.u}</strong><br>
-              <span style="color:#fda4af;font-size:1.1rem;">Sản phẩm: ${order.productName}</span><br>
-              <span style="color:#fbbf24;font-size:1.1rem;">Ngày: ${order.date}</span>
+              <strong style="color:#fecaca;font-size:1.25rem;">${user.u}</strong><br>
+              <span style="color:#fda4af;">Sản phẩm: ${order.productName}</span><br>
+              <span style="color:#fbbf24;">${order.date}</span>
             </div>
-            <button class="approve-btn" onclick="approveOrder('${user.u}', ${orderIndex})">Duyệt & Gửi TK/MK</button>
+            <button class="approve-btn" onclick="approveOrder('${user.u}', ${ordIdx})">Duyệt & Gửi TK/MK</button>
           </div>
         `;
       }
     });
   });
-  list.innerHTML = html || "<p style='text-align:center;color:#fda4af;font-size:1.2rem;padding:30px 0;'>Không có đơn hàng chờ duyệt.</p>";
+
+  container.innerHTML = html || "<p style='text-align:center;color:#fda4af;padding:20px;'>Không có đơn chờ duyệt</p>";
 }
 
 function approveOrder(username, orderIndex) {
   const details = prompt("Nhập tài khoản / mật khẩu cho đơn này:");
-  if (!details) return alert("Vui lòng nhập thông tin tài khoản!");
+  if (!details) return alert("Bạn phải nhập thông tin tài khoản!");
 
   showLoading();
   setTimeout(() => {
-    const userIndex = users.findIndex(u => u.u === username);
-    if (userIndex !== -1) {
-      users[userIndex].orders[orderIndex].status = 'approved';
-      users[userIndex].orders[orderIndex].details = details;
-      storage.setItem("users", JSON.stringify(users));
-      if (currentUser && currentUser.u === username) {
-        currentUser.orders = users[userIndex].orders;
-        storage.setItem("currentUser", JSON.stringify(currentUser));
-      }
-      renderPendingOrders();
-      render();
-      hideLoading();
-      alert("Đã duyệt và lưu thông tin cho user!");
+    const userIdx = users.findIndex(u => u.u === username);
+    if (userIdx === -1) return;
+
+    users[userIdx].orders[orderIndex].status = 'approved';
+    users[userIdx].orders[orderIndex].details = details;
+
+    if (currentUser && currentUser.u === username) {
+      currentUser.orders = users[userIdx].orders;
     }
+
+    saveAll();
+    renderPendingOrders();
+    render();
+    hideLoading();
+    alert("Đã duyệt đơn!");
+  }, 700);
+}
+
+function renderProductList() {
+  const container = document.getElementById("productList");
+  let html = "";
+
+  products.forEach((p, i) => {
+    html += `
+      <div class="product-item">
+        <div>
+          <strong style="color:#fecaca;">${p.name}</strong><br>
+          <span style="color:#fda4af;">${p.desc || ''} - ${Number(p.price).toLocaleString('vi-VN')}đ</span>
+        </div>
+        <button class="delete-btn" onclick="deleteProduct(${i})">Xóa</button>
+      </div>
+    `;
+  });
+
+  container.innerHTML = html || "<p style='text-align:center;color:#fda4af;padding:20px;'>Chưa có sản phẩm</p>";
+}
+
+function addNewProduct() {
+  const name = document.getElementById("newProductName").value.trim();
+  const desc = document.getElementById("newProductDesc").value.trim();
+  const price = Number(document.getElementById("newProductPrice").value);
+
+  if (!name) return alert("Nhập tên sản phẩm!");
+  if (isNaN(price) || price <= 0) return alert("Giá phải là số dương!");
+
+  showLoading();
+  setTimeout(() => {
+    products.push({ name, desc, price, sold: 0 });
+    saveAll();
+    document.getElementById("newProductName").value = "";
+    document.getElementById("newProductDesc").value = "";
+    document.getElementById("newProductPrice").value = "";
+    renderProductList();
+    hideLoading();
+    alert("Đã thêm sản phẩm!");
+  }, 700);
+}
+
+function deleteProduct(index) {
+  if (!confirm("Xóa sản phẩm này?")) return;
+  showLoading();
+  setTimeout(() => {
+    products.splice(index, 1);
+    saveAll();
+    renderProductList();
+    hideLoading();
   }, 600);
 }
 
-// ... (các hàm sản phẩm, QR, notice, register, login, logout, buy giữ nguyên từ code trước)
+function saveNotice() {
+  notice = document.getElementById("n").value.trim() || notice;
+  saveAll();
+  alert("Đã lưu thông báo!");
+  render();
+}
 
+function saveQR() {
+  const note = document.getElementById("qn").value.trim();
+  qrNote = note || qrNote;
+
+  const fileInput = document.getElementById("qrFileInput");
+  if (fileInput.files && fileInput.files[0]) {
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      qr = e.target.result;
+      document.getElementById("qrPreview").src = qr;
+      saveAll();
+      alert("Đã cập nhật QR và ghi chú!");
+    };
+    reader.readAsDataURL(fileInput.files[0]);
+  } else {
+    saveAll();
+    alert("Đã cập nhật ghi chú QR!");
+  }
+}
+
+// Khởi chạy
 render();
 </script>
 </body>
