@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Orbitron:wght@700;800;900&family=Poppins:wght@700;800&display=swap" rel="stylesheet">
 <style>
   * { margin:0; padding:0; box-sizing:border-box; }
   body {
@@ -18,13 +18,13 @@
   }
 
   .top {
-    height: 80px;
+    height: 70px;
     background: rgba(30, 0, 0, 0.92);
     backdrop-filter: blur(12px);
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 0 40px;
+    padding: 0 30px;
     border-bottom: 1px solid rgba(239, 68, 68, 0.4);
     position: sticky;
     top: 0;
@@ -32,36 +32,38 @@
   }
 
   .logo {
-    font-family: 'Poppins', sans-serif;
-    font-size: 2.2rem;
-    font-weight: 800;
-    letter-spacing: -0.5px;
-    background: linear-gradient(90deg, #ef4444, #f87171, #fca5a5);
+    font-family: 'Orbitron', sans-serif;
+    font-size: 2.4rem;
+    font-weight: 900;
+    letter-spacing: -1px;
+    background: linear-gradient(90deg, #ff2d55, #ff6b6b, #ff9f9f, #ff2d55);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
+    text-shadow: 0 0 20px rgba(255, 45, 85, 0.7);
   }
 
   .top-right {
     display: flex;
     align-items: center;
-    gap: 18px;
+    gap: 12px;
   }
+
   .top-right button, .top-right .admin-btn {
     background: linear-gradient(135deg, #ef4444, #dc2626);
     color: white;
     border: none;
-    padding: 12px 24px;
-    border-radius: 12px;
+    padding: 8px 16px;
+    border-radius: 8px;
     font-weight: 700;
-    font-size: 1rem;
+    font-size: 0.95rem;
     cursor: pointer;
-    transition: all 0.3s ease;
-    box-shadow: 0 5px 18px rgba(239, 68, 68, 0.45);
+    transition: all 0.25s ease;
+    box-shadow: 0 3px 10px rgba(239, 68, 68, 0.4);
   }
 
   .top-right button:hover, .top-right .admin-btn:hover {
-    transform: translateY(-3px) scale(1.06);
-    box-shadow: 0 14px 35px rgba(239, 68, 68, 0.65);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(239, 68, 68, 0.6);
     background: linear-gradient(135deg, #f87171, #ef4444);
   }
 
@@ -318,6 +320,7 @@
   @media (max-width: 768px) {
     .wrap { flex-direction: column; }
     .sidebar { width: 100%; }
+    .logo { font-size: 2rem; }
   }
 </style>
 </head>
@@ -329,7 +332,7 @@
 </div>
 
 <div class="top">
-  <div class="logo">Tun Media</div>
+  <div class="logo">TUN MEDIA</div>
   <div class="top-right" id="topRight"></div>
 </div>
 
@@ -363,7 +366,7 @@
   </div>
 </div>
 
-<!-- Modal Admin -->
+<!-- Modal Admin (giữ nguyên như cũ) -->
 <div class="modal hidden" id="adminModal">
   <div class="box">
     <h3>Admin Panel</h3>
@@ -555,7 +558,7 @@ function login() {
   const user = users.find(x => x.u === u && x.p === hash(p));
   if (!user) return alert("Sai tên đăng nhập hoặc mật khẩu!");
 
-  currentUser = {...user}; // copy để tránh reference
+  currentUser = {...user};
   storage.setItem("currentUser", JSON.stringify(currentUser));
   document.getElementById("loginModal").classList.add("hidden");
   render();
