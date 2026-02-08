@@ -14,7 +14,7 @@
     background: #0f0f0f;
     color: #e2e8f0;
     min-height: 100vh;
-    background: linear-gradient(135deg, #1a0000 0%, #300000 100%);
+    background: linear-gradient(135deg, #000000 0%, #ff0000 50%, #000000 100%);
   }
 
   .top {
@@ -25,7 +25,7 @@
     align-items: center;
     justify-content: space-between;
     padding: 0 30px;
-    border-bottom: 1px solid rgba(239, 68, 68, 0.4);
+    border-bottom: 1px solid rgba(255, 0, 0, 0.6);
     position: sticky;
     top: 0;
     z-index: 1000;
@@ -33,19 +33,31 @@
 
   .logo {
     font-family: 'Orbitron', sans-serif;
-    font-size: 2.4rem;
+    font-size: 1.8rem;
     font-weight: 900;
-    letter-spacing: -1px;
-    background: linear-gradient(90deg, #ff2d55, #ff6b6b, #ff9f9f, #ff2d55);
+    letter-spacing: -0.5px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    line-height: 1;
+    background: linear-gradient(90deg, #ff0000, #ff4d4d, #ff9999, #ff0000);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-    text-shadow: 0 0 20px rgba(255, 45, 85, 0.7);
-    animation: glow 2s ease-in-out infinite alternate;
+    text-shadow: 0 0 25px rgba(255, 0, 0, 0.8);
+    animation: glow 1.5s ease-in-out infinite alternate;
+  }
+
+  .logo span:first-child {
+    font-size: 2.2rem;
+  }
+
+  .logo span:last-child {
+    font-size: 1.4rem;
   }
 
   @keyframes glow {
-    from { text-shadow: 0 0 10px rgba(255, 45, 85, 0.5); }
-    to { text-shadow: 0 0 30px rgba(255, 45, 85, 1); }
+    from { text-shadow: 0 0 15px rgba(255, 0, 0, 0.6); }
+    to { text-shadow: 0 0 40px rgba(255, 0, 0, 1); }
   }
 
   .top-right {
@@ -55,7 +67,7 @@
   }
 
   .top-right button, .top-right .admin-btn {
-    background: linear-gradient(135deg, #ef4444, #dc2626);
+    background: linear-gradient(135deg, #ff0000, #cc0000);
     color: white;
     border: none;
     padding: 8px 16px;
@@ -64,7 +76,7 @@
     font-size: 0.95rem;
     cursor: pointer;
     transition: all 0.25s ease;
-    box-shadow: 0 3px 10px rgba(239, 68, 68, 0.4);
+    box-shadow: 0 3px 10px rgba(255, 0, 0, 0.5), 0 0 15px rgba(255, 0, 0, 0.3);
     position: relative;
     overflow: hidden;
   }
@@ -76,7 +88,7 @@
     left: -50%;
     width: 200%;
     height: 200%;
-    background: radial-gradient(circle, rgba(255,255,255,0.2) 0%, transparent 70%);
+    background: radial-gradient(circle, rgba(255,255,255,0.25) 0%, transparent 70%);
     opacity: 0;
     transition: all 0.5s;
   }
@@ -89,8 +101,8 @@
 
   .top-right button:hover, .top-right .admin-btn:hover {
     transform: translateY(-2px) scale(1.05);
-    box-shadow: 0 8px 20px rgba(239, 68, 68, 0.6), 0 0 30px rgba(239, 68, 68, 0.8);
-    background: linear-gradient(135deg, #f87171, #ef4444);
+    box-shadow: 0 8px 20px rgba(255, 0, 0, 0.7), 0 0 40px rgba(255, 0, 0, 1);
+    background: linear-gradient(135deg, #ff4d4d, #ff0000);
   }
 
   .wrap {
@@ -103,23 +115,23 @@
 
   .sidebar {
     width: 280px;
-    background: rgba(20, 0, 0, 0.75);
+    background: linear-gradient(180deg, rgba(30, 0, 0, 0.85) 0%, rgba(255, 0, 0, 0.15) 100%);
     backdrop-filter: blur(12px);
     border-radius: 20px;
     padding: 30px 20px;
-    border: 1px solid rgba(239, 68, 68, 0.25);
+    border: 1px solid rgba(255, 0, 0, 0.4);
     height: fit-content;
-    box-shadow: 0 0 20px rgba(239, 68, 68, 0.3);
+    box-shadow: 0 0 30px rgba(255, 0, 0, 0.4);
   }
 
   .sidebar h3 {
-    color: #f87171;
+    color: #ff4d4d;
     font-size: 1.1rem;
     font-weight: 800;
     margin-bottom: 24px;
     text-transform: uppercase;
-    letter-spacing: 1.8px;
-    text-shadow: 0 0 5px rgba(248, 113, 113, 0.5);
+    letter-spacing: 2px;
+    text-shadow: 0 0 8px rgba(255, 77, 77, 0.6);
   }
 
   .sidebar a {
@@ -128,7 +140,7 @@
     padding: 16px 20px;
     border-radius: 12px;
     margin-bottom: 10px;
-    color: #fda4af;
+    color: #ff9999;
     font-weight: 600;
     font-size: 1.05rem;
     transition: all 0.3s;
@@ -136,7 +148,8 @@
     position: relative;
     overflow: hidden;
     text-decoration: none;
-    box-shadow: inset 0 0 10px rgba(239, 68, 68, 0.1);
+    box-shadow: inset 0 0 15px rgba(255, 0, 0, 0.2);
+    background: rgba(255, 0, 0, 0.05);
   }
 
   .sidebar a::before {
@@ -146,7 +159,7 @@
     left: -100%;
     width: 100%;
     height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(239, 68, 68, 0.3), transparent);
+    background: linear-gradient(90deg, transparent, rgba(255, 0, 0, 0.4), transparent);
     transition: all 0.5s;
   }
 
@@ -155,16 +168,16 @@
   }
 
   .sidebar a:hover {
-    background: rgba(239, 68, 68, 0.18);
-    color: #fef2f2;
+    background: rgba(255, 0, 0, 0.25);
+    color: #ffffff;
     transform: translateX(8px) scale(1.05);
-    box-shadow: 0 0 15px rgba(239, 68, 68, 0.5), inset 0 0 20px rgba(239, 68, 68, 0.3);
+    box-shadow: 0 0 20px rgba(255, 0, 0, 0.6), inset 0 0 25px rgba(255, 0, 0, 0.4);
   }
 
   .sidebar a i {
     margin-right: 12px;
     font-size: 1.2rem;
-    color: #ef4444;
+    color: #ff0000;
     transition: transform 0.3s, color 0.3s;
   }
 
@@ -177,13 +190,13 @@
 
   .notice {
     background: rgba(30, 0, 0, 0.65);
-    border-left: 6px solid #ef4444;
+    border-left: 6px solid #ff0000;
     padding: 18px 24px;
     border-radius: 14px;
     margin-bottom: 35px;
     font-size: 1.05rem;
     backdrop-filter: blur(8px);
-    box-shadow: 0 4px 15px rgba(239, 68, 68, 0.2);
+    box-shadow: 0 4px 15px rgba(255, 0, 0, 0.3);
   }
 
   .products {
@@ -193,52 +206,52 @@
   }
 
   .card {
-    background: rgba(20, 0, 0, 0.78);
+    background: linear-gradient(180deg, rgba(20, 0, 0, 0.78) 0%, rgba(255, 0, 0, 0.1) 100%);
     border-radius: 20px;
     padding: 28px;
-    border: 1px solid rgba(239, 68, 68, 0.25);
+    border: 1px solid rgba(255, 0, 0, 0.35);
     transition: all 0.4s ease;
     backdrop-filter: blur(10px);
-    box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.5), 0 0 20px rgba(255, 0, 0, 0.3);
   }
 
   .card:hover {
     transform: translateY(-16px);
-    box-shadow: 0 28px 60px -14px rgba(239, 68, 68, 0.4), 0 0 40px rgba(239, 68, 68, 0.6);
-    border-color: #ef4444;
+    box-shadow: 0 28px 60px -14px rgba(255, 0, 0, 0.5), 0 0 50px rgba(255, 0, 0, 0.7);
+    border-color: #ff0000;
   }
 
   .card h4 {
-    color: #fecaca;
+    color: #ff9999;
     font-size: 1.45rem;
     margin-bottom: 12px;
-    text-shadow: 0 0 5px rgba(254, 202, 202, 0.3);
+    text-shadow: 0 0 6px rgba(255, 153, 153, 0.4);
   }
 
   .price {
-    color: #fbbf24;
+    color: #ffcc00;
     font-size: 1.8rem;
     font-weight: 800;
     margin: 14px 0 10px;
-    text-shadow: 0 0 10px rgba(251, 191, 36, 0.5);
+    text-shadow: 0 0 12px rgba(255, 204, 0, 0.6);
   }
 
   .sold {
-    color: #34d399;
+    color: #00ff99;
     font-size: 1.05rem;
     font-weight: 600;
     margin-bottom: 8px;
   }
 
   .inventory {
-    color: #a5b4fc;
+    color: #99ccff;
     font-size: 1.05rem;
     font-weight: 600;
     margin-bottom: 18px;
   }
 
   .buy {
-    background: linear-gradient(135deg, #ef4444, #b91c1c);
+    background: linear-gradient(135deg, #ff0000, #990000);
     color: white;
     font-weight: 700;
     font-size: 1.1rem;
@@ -247,11 +260,11 @@
     border-radius: 12px;
     cursor: pointer;
     transition: all 0.3s ease;
-    box-shadow: 0 6px 16px rgba(239, 68, 68, 0.4), 0 0 20px rgba(239, 68, 68, 0.3);
+    box-shadow: 0 6px 16px rgba(255, 0, 0, 0.5), 0 0 25px rgba(255, 0, 0, 0.4);
     border: 2px solid transparent;
     position: relative;
     overflow: hidden;
-    text-shadow: 0 0 4px rgba(0,0,0,0.5);
+    text-shadow: 0 0 5px rgba(0,0,0,0.6);
   }
 
   .buy::before {
@@ -261,7 +274,7 @@
     left: 50%;
     width: 0;
     height: 0;
-    background: rgba(255,255,255,0.2);
+    background: rgba(255,255,255,0.25);
     border-radius: 50%;
     transform: translate(-50%, -50%);
     transition: width 0.6s ease, height 0.6s ease;
@@ -273,40 +286,39 @@
   }
 
   .buy:hover {
-    background: linear-gradient(135deg, #f87171, #ef4444);
+    background: linear-gradient(135deg, #ff4d4d, #ff0000);
     transform: translateY(-3px) scale(1.04);
-    box-shadow: 0 12px 30px rgba(239, 68, 68, 0.6), 0 0 40px rgba(239, 68, 68, 0.8);
-    text-shadow: 0 0 6px rgba(0,0,0,0.7);
+    box-shadow: 0 12px 30px rgba(255, 0, 0, 0.7), 0 0 50px rgba(255, 0, 0, 1);
   }
 
   .buy:active {
-    border: 2px solid #ef4444;
-    box-shadow: 0 0 12px rgba(239, 68, 68, 0.8), inset 0 0 20px rgba(239, 68, 68, 0.5);
+    border: 2px solid #ff0000;
+    box-shadow: 0 0 15px rgba(255, 0, 0, 0.9), inset 0 0 25px rgba(255, 0, 0, 0.6);
     transform: translateY(0) scale(1);
   }
 
   .box {
-    background: rgba(20, 0, 0, 0.78);
+    background: linear-gradient(180deg, rgba(20, 0, 0, 0.78) 0%, rgba(255, 0, 0, 0.1) 100%);
     border-radius: 20px;
     padding: 35px;
     margin-bottom: 40px;
-    border: 1px solid rgba(239, 68, 68, 0.25);
+    border: 1px solid rgba(255, 0, 0, 0.35);
     backdrop-filter: blur(10px);
-    box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.6), 0 0 20px rgba(255, 0, 0, 0.3);
   }
 
   .box h3, .box h4 {
-    color: #f87171;
+    color: #ff4d4d;
     margin-bottom: 28px;
     font-size: 1.5rem;
-    text-shadow: 0 0 8px rgba(248, 113, 113, 0.4);
+    text-shadow: 0 0 10px rgba(255, 77, 77, 0.5);
   }
 
   input, textarea, select {
     width: 100%;
     padding: 16px 18px;
     border-radius: 12px;
-    border: 1px solid rgba(239, 68, 68, 0.35);
+    border: 1px solid rgba(255, 0, 0, 0.45);
     background: rgba(40, 0, 0, 0.65);
     color: white;
     margin-bottom: 20px;
@@ -316,12 +328,12 @@
 
   input:focus, textarea:focus, select:focus {
     outline: none;
-    border-color: #ef4444;
-    box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.3), 0 0 15px rgba(239, 68, 68, 0.5);
+    border-color: #ff0000;
+    box-shadow: 0 0 0 4px rgba(255, 0, 0, 0.4), 0 0 20px rgba(255, 0, 0, 0.6);
   }
 
   button.action-btn {
-    background: linear-gradient(135deg, #ef4444, #dc2626);
+    background: linear-gradient(135deg, #ff0000, #cc0000);
     color: white;
     border: none;
     padding: 16px 24px;
@@ -330,10 +342,10 @@
     font-size: 1.1rem;
     cursor: pointer;
     transition: all 0.3s;
-    box-shadow: 0 6px 20px rgba(239, 68, 68, 0.5), 0 0 25px rgba(239, 68, 68, 0.3);
+    box-shadow: 0 6px 20px rgba(255, 0, 0, 0.6), 0 0 30px rgba(255, 0, 0, 0.4);
     position: relative;
     overflow: hidden;
-    text-shadow: 0 0 4px rgba(0,0,0,0.5);
+    text-shadow: 0 0 5px rgba(0,0,0,0.6);
   }
 
   button.action-btn::before {
@@ -343,7 +355,7 @@
     left: 50%;
     width: 0;
     height: 0;
-    background: rgba(255,255,255,0.2);
+    background: rgba(255,255,255,0.25);
     border-radius: 50%;
     transform: translate(-50%, -50%);
     transition: width 0.6s ease, height 0.6s ease;
@@ -356,13 +368,12 @@
 
   button.action-btn:hover {
     transform: translateY(-3px) scale(1.05);
-    box-shadow: 0 15px 35px rgba(239, 68, 68, 0.7), 0 0 40px rgba(239, 68, 68, 0.8);
-    background: linear-gradient(135deg, #f87171, #ef4444);
-    text-shadow: 0 0 6px rgba(0,0,0,0.7);
+    box-shadow: 0 15px 35px rgba(255, 0, 0, 0.8), 0 0 50px rgba(255, 0, 0, 1);
+    background: linear-gradient(135deg, #ff4d4d, #ff0000);
   }
 
   .delete-btn {
-    background: #991b1b;
+    background: #990000;
     color: white;
     padding: 10px 18px;
     border-radius: 10px;
@@ -370,19 +381,18 @@
     cursor: pointer;
     font-size: 1rem;
     transition: all 0.3s;
-    box-shadow: 0 4px 10px rgba(153, 27, 27, 0.4);
-    text-shadow: 0 0 4px rgba(0,0,0,0.5);
+    box-shadow: 0 4px 10px rgba(153, 0, 0, 0.5), 0 0 15px rgba(153, 0, 0, 0.3);
+    text-shadow: 0 0 5px rgba(0,0,0,0.6);
   }
 
   .delete-btn:hover { 
-    background: #b91c1c; 
+    background: #cc0000; 
     transform: scale(1.1);
-    box-shadow: 0 8px 20px rgba(153, 27, 27, 0.6);
-    text-shadow: 0 0 6px rgba(0,0,0,0.7);
+    box-shadow: 0 8px 20px rgba(153, 0, 0, 0.7), 0 0 30px rgba(153, 0, 0, 0.6);
   }
 
   .approve-btn {
-    background: #16a34a;
+    background: #00cc66;
     color: white;
     padding: 10px 18px;
     border-radius: 10px;
@@ -390,15 +400,14 @@
     cursor: pointer;
     font-size: 1rem;
     transition: all 0.3s;
-    box-shadow: 0 4px 10px rgba(22, 163, 74, 0.4);
-    text-shadow: 0 0 4px rgba(0,0,0,0.5);
+    box-shadow: 0 4px 10px rgba(0, 204, 102, 0.5), 0 0 15px rgba(0, 204, 102, 0.3);
+    text-shadow: 0 0 5px rgba(0,0,0,0.6);
   }
 
   .approve-btn:hover { 
-    background: #22c55e; 
+    background: #00ff80; 
     transform: scale(1.1);
-    box-shadow: 0 8px 20px rgba(22, 163, 74, 0.6);
-    text-shadow: 0 0 6px rgba(0,0,0,0.7);
+    box-shadow: 0 8px 20px rgba(0, 204, 102, 0.7), 0 0 30px rgba(0, 204, 102, 0.6);
   }
 
   .user-list-item, .product-item, .order-item, .discount-item {
@@ -409,7 +418,7 @@
     background: rgba(40, 0, 0, 0.55);
     border-radius: 14px;
     margin: 14px 0;
-    border: 1px solid rgba(239, 68, 68, 0.2);
+    border: 1px solid rgba(255, 0, 0, 0.3);
     flex-wrap: wrap;
     gap: 20px;
     font-size: 1.1rem;
@@ -417,7 +426,7 @@
   }
 
   .user-list-item:hover, .product-item:hover, .order-item:hover, .discount-item:hover {
-    box-shadow: 0 0 15px rgba(239, 68, 68, 0.3);
+    box-shadow: 0 0 20px rgba(255, 0, 0, 0.4);
   }
 
   .search-input {
@@ -446,8 +455,8 @@
     background: rgba(20, 0, 0, 0.96);
     border-radius: 24px;
     padding: 50px 60px;
-    border: 1px solid rgba(239, 68, 68, 0.4);
-    box-shadow: 0 35px 80px rgba(0,0,0,0.75), 0 0 50px rgba(239, 68, 68, 0.2);
+    border: 1px solid rgba(255, 0, 0, 0.5);
+    box-shadow: 0 35px 80px rgba(0,0,0,0.75), 0 0 60px rgba(255, 0, 0, 0.3);
     max-height: 90vh;
     overflow-y: auto;
     animation: fadeIn 0.5s ease;
@@ -459,33 +468,29 @@
   }
 
   .modal h3 {
-    color: #f87171;
+    color: #ff4d4d;
     text-align: center;
     margin-bottom: 40px;
     font-size: 2.1rem;
-    text-shadow: 0 0 10px rgba(248, 113, 113, 0.5);
+    text-shadow: 0 0 12px rgba(255, 77, 77, 0.6);
   }
 
   .qr-preview {
     max-width: 360px;
     border-radius: 16px;
-    border: 3px solid #ef4444;
+    border: 3px solid #ff0000;
     margin: 24px auto;
     display: block;
-    box-shadow: 0 0 20px rgba(239, 68, 68, 0.4);
+    box-shadow: 0 0 25px rgba(255, 0, 0, 0.5);
   }
 
   @media (max-width: 768px) {
-    .wrap { flex-direction: column; gap: 20px; }
-    .sidebar { width: 100%; padding: 20px 15px; border-radius: 15px; }
-    .sidebar a { padding: 12px 15px; font-size: 1rem; transform: none; }
-    .sidebar a:hover { transform: translateX(5px) scale(1.02); }
-    .logo { font-size: 2rem; }
-    .top { padding: 0 15px; height: 60px; }
-    .products { grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 20px; }
-    .card { padding: 20px; border-radius: 15px; }
-    .card:hover { transform: translateY(-10px); box-shadow: 0 20px 40px -10px rgba(239, 68, 68, 0.3), 0 0 30px rgba(239, 68, 68, 0.5); }
-    .modal .box { padding: 30px 20px; max-width: 95%; }
+    .wrap { flex-direction: column; }
+    .sidebar { width: 100%; }
+    .logo { font-size: 1.6rem; }
+    .logo span:first-child { font-size: 2rem; }
+    .logo span:last-child { font-size: 1.2rem; }
+    .modal .box { padding: 30px 20px; }
   }
 
   /* Thêm font awesome cho icon */
@@ -495,12 +500,12 @@
 <body>
 
 <div id="loadingOverlay" style="position:fixed;inset:0;background:rgba(10,0,0,0.96);backdrop-filter:blur(12px);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:99999;opacity:0;visibility:hidden;transition:all 0.4s;">
-  <div class="spinner" style="width:90px;height:90px;border:10px solid rgba(239,68,68,0.25);border-top:10px solid #ef4444;border-radius:50%;animation:spin 1s linear infinite;"></div>
-  <div style="margin-top:35px;font-size:1.4rem;font-weight:700;color:#ef4444;">Đang xử lý...</div>
+  <div class="spinner" style="width:90px;height:90px;border:10px solid rgba(255,0,0,0.3);border-top:10px solid #ff0000;border-radius:50%;animation:spin 1s linear infinite;"></div>
+  <div style="margin-top:35px;font-size:1.4rem;font-weight:700;color:#ff0000;">Đang xử lý...</div>
 </div>
 
 <div class="top">
-  <div class="logo">TUN MEDIA</div>
+  <div class="logo"><span>TUN</span><span>MEDIA</span></div>
   <div class="top-right" id="topRight"></div>
 </div>
 
@@ -553,11 +558,11 @@
 
     <!-- Quản lý người dùng -->
     <div class="box">
-      <h4 style="color:#fecaca;">Quản lý người dùng</h4>
+      <h4 style="color:#ff9999;">Quản lý người dùng</h4>
       <input id="userSearch" class="search-input" placeholder="Tìm kiếm tên user..." oninput="renderUserList()">
       <div id="userList"></div>
       
-      <h4 style="color:#fecaca;margin-top:40px;">Thêm người dùng mới</h4>
+      <h4 style="color:#ff9999;margin-top:40px;">Thêm người dùng mới</h4>
       <input id="newUserName" placeholder="Tên đăng nhập">
       <input id="newUserPass" type="password" placeholder="Mật khẩu">
       <input id="newUserBalance" type="number" placeholder="Số dư ban đầu (đ)">
@@ -566,16 +571,16 @@
 
     <!-- Duyệt đơn hàng -->
     <div class="box">
-      <h4 style="color:#fecaca;">Duyệt đơn hàng</h4>
+      <h4 style="color:#ff9999;">Duyệt đơn hàng</h4>
       <div id="pendingOrders"></div>
     </div>
 
     <!-- Quản lý sản phẩm -->
     <div class="box">
-      <h4 style="color:#fecaca;">Quản lý sản phẩm</h4>
+      <h4 style="color:#ff9999;">Quản lý sản phẩm</h4>
       <div id="productList"></div>
       
-      <h4 style="color:#fecaca;margin-top:40px;">Thêm sản phẩm mới</h4>
+      <h4 style="color:#ff9999;margin-top:40px;">Thêm sản phẩm mới</h4>
       <input id="newProductName" placeholder="Tên sản phẩm">
       <input id="newProductDesc" placeholder="Mô tả ngắn">
       <input id="newProductPrice" type="number" placeholder="Giá (đ)">
@@ -585,10 +590,10 @@
 
     <!-- Quản lý mã giảm giá -->
     <div class="box">
-      <h4 style="color:#fecaca;">Quản lý mã giảm giá</h4>
+      <h4 style="color:#ff9999;">Quản lý mã giảm giá</h4>
       <div id="discountList"></div>
       
-      <h4 style="color:#fecaca;margin-top:40px;">Thêm mã giảm giá mới</h4>
+      <h4 style="color:#ff9999;margin-top:40px;">Thêm mã giảm giá mới</h4>
       <input id="newDiscountCode" placeholder="Mã giảm giá (ví dụ: DISCOUNT10)">
       <input id="newDiscountPercent" type="number" placeholder="Phần trăm giảm (ví dụ: 10)">
       <button class="action-btn" onclick="addNewDiscount()">Thêm Mã</button>
@@ -596,16 +601,16 @@
 
     <!-- Thông báo trang chủ -->
     <div class="box">
-      <h4 style="color:#fecaca;">Thông báo trang chủ</h4>
+      <h4 style="color:#ff9999;">Thông báo trang chủ</h4>
       <textarea id="n" rows="4" placeholder="Nhập thông báo..."></textarea>
       <button class="action-btn" onclick="saveNotice()">Lưu</button>
     </div>
 
     <!-- QR Nạp tiền -->
     <div class="box">
-      <h4 style="color:#fecaca;">QR Nạp tiền</h4>
+      <h4 style="color:#ff9999;">QR Nạp tiền</h4>
       <input type="file" id="qrFileInput" accept="image/*">
-      <p style="font-size:1rem;color:#fda4af;margin:12px 0;">Chọn ảnh QR mới (hoặc giữ nguyên QR cũ)</p>
+      <p style="font-size:1rem;color:#ff9999;margin:12px 0;">Chọn ảnh QR mới (hoặc giữ nguyên QR cũ)</p>
       <img id="qrPreview" class="qr-preview" src="https://i.imgur.com/9Z7Y9Kb.png" alt="QR hiện tại">
       <input id="qn" placeholder="Ghi chú (hiển thị dưới QR)">
       <button class="action-btn" onclick="saveQR()">Lưu QR & Ghi chú</button>
@@ -671,7 +676,7 @@ function saveAll() {
 function render() {
   const topRight = document.getElementById("topRight");
   let html = currentUser 
-    ? `<span style="color:#fecaca; font-weight:600;">${currentUser.u} • <span style="color:#fbbf24;">${Number(currentUser.balance || 0).toLocaleString('vi-VN')}đ</span></span>`
+    ? `<span style="color:#ff9999; font-weight:600;">${currentUser.u} • <span style="color:#ffcc00;">${Number(currentUser.balance || 0).toLocaleString('vi-VN')}đ</span></span>`
     : `<button onclick="openLogin()">Đăng nhập</button><button onclick="openRegister()">Đăng ký</button>`;
 
   if (isAdmin()) {
@@ -697,13 +702,13 @@ function render() {
         ${products.length ? products.map((p,i)=>`
           <div class="card">
             <h4>${p.name}</h4>
-            <div style="color:#fda4af;margin:10px 0;">${p.desc || ''}</div>
+            <div style="color:#ff9999;margin:10px 0;">${p.desc || ''}</div>
             <div class="price">${Number(p.price || 0).toLocaleString('vi-VN')}đ</div>
             <div class="sold">Đã bán: <strong>${Number(p.sold || 0).toLocaleString('vi-VN')}</strong></div>
             <div class="inventory">Còn lại: <strong>${Number(p.inventory || 0).toLocaleString('vi-VN')} cái</strong></div>
             <div class="buy" onclick="${p.inventory > 0 ? `openBuyModal(${i})` : `alert('Sản phẩm tạm hết hàng!')`}">${p.inventory > 0 ? 'MUA NGAY' : 'HẾT HÀNG'}</div>
           </div>
-        `).join("") : "<div style='text-align:center;padding:100px 0;color:#fda4af;font-size:1.3rem;'>Chưa có sản phẩm</div>"}
+        `).join("") : "<div style='text-align:center;padding:100px 0;color:#ff9999;font-size:1.3rem;'>Chưa có sản phẩm</div>"}
       </div>`;
   }
 
@@ -711,15 +716,15 @@ function render() {
     content.innerHTML = `
       <div class="box" style="text-align:center">
         <h3>Nạp Tiền</h3>
-        ${qr ? `<img src="${qr}" alt="QR" style="max-width:340px;border-radius:20px;border:3px solid #ef4444;">` : "<p style='color:#fda4af'>Chưa có QR</p>"}
-        <p style="margin:30px 0;color:#fecaca;font-size:1.1rem;">${qrNote}</p>
-        <p style="color:#fda4af;font-size:1.05rem;">Nội dung chuyển khoản: <strong style="color:#fbbf24;">${currentUser ? currentUser.u + ' nap tien' : 'ten_tai_khoan nap tien'}</strong></p>
+        ${qr ? `<img src="${qr}" alt="QR" style="max-width:340px;border-radius:20px;border:3px solid #ff0000;">` : "<p style='color:#ff9999'>Chưa có QR</p>"}
+        <p style="margin:30px 0;color:#ff9999;font-size:1.1rem;">${qrNote}</p>
+        <p style="color:#ff9999;font-size:1.05rem;">Nội dung chuyển khoản: <strong style="color:#ffcc00;">${currentUser ? currentUser.u + ' nap tien' : 'ten_tai_khoan nap tien'}</strong></p>
       </div>`;
   }
 
   if(view === "orders") {
     if (!currentUser) {
-      content.innerHTML = "<div style='text-align:center;padding:100px 0;color:#fda4af;font-size:1.3rem;'>Vui lòng đăng nhập để xem lịch sử mua.</div>";
+      content.innerHTML = "<div style='text-align:center;padding:100px 0;color:#ff9999;font-size:1.3rem;'>Vui lòng đăng nhập để xem lịch sử mua.</div>";
       return;
     }
     let ordersHtml = "";
@@ -727,9 +732,9 @@ function render() {
       ordersHtml += `
         <div class="order-item">
           <div>
-            <strong style="color:#fecaca;font-size:1.2rem;">${order.productName}</strong><br>
-            <span style="color:#fda4af;">Ngày: ${order.date}</span><br>
-            <span style="color:${order.status === 'pending' ? '#fbbf24' : '#34d399'};font-weight:600;">Trạng thái: ${order.status === 'pending' ? 'Đợi duyệt' : 'Đã duyệt'}</span>
+            <strong style="color:#ff9999;font-size:1.2rem;">${order.productName}</strong><br>
+            <span style="color:#ff9999;">Ngày: ${order.date}</span><br>
+            <span style="color:${order.status === 'pending' ? '#ffcc00' : '#00ff99'};font-weight:600;">Trạng thái: ${order.status === 'pending' ? 'Đợi duyệt' : 'Đã duyệt'}</span>
           </div>
           ${order.status === 'approved' && order.details ? `<button class="approve-btn" onclick="showDetails('${order.details.replace(/'/g, "\\'")}')">Xem TK/MK</button>` : ''}
         </div>
@@ -738,7 +743,7 @@ function render() {
     content.innerHTML = `
       <div class="box">
         <h3>Lịch sử mua của bạn</h3>
-        ${ordersHtml || "<p style='text-align:center;color:#fda4af;font-size:1.2rem;'>Chưa có đơn hàng nào.</p>"}
+        ${ordersHtml || "<p style='text-align:center;color:#ff9999;font-size:1.2rem;'>Chưa có đơn hàng nào.</p>"}
       </div>
     `;
   }
@@ -808,8 +813,8 @@ function openBuyModal(index) {
   document.getElementById("discountCode").value = "";
   document.getElementById("buyModal").classList.remove("hidden");
 
-  // Thay đổi oninput thành onblur để chỉ kiểm tra khi mất focus
-  document.getElementById("discountCode").onblur = function() {
+  // Sự kiện oninput cho mã giảm giá
+  document.getElementById("discountCode").oninput = function() {
     const code = this.value.trim().toUpperCase();
     const discount = discounts.find(d => d.code === code);
     let finalPrice = product.price;
@@ -894,20 +899,20 @@ function renderUserList() {
     html += `
       <div class="user-list-item">
         <div>
-          <strong style="color:#fecaca;font-size:1.25rem;">${user.u}</strong><br>
-          <span style="color:#fda4af;">Số dư: ${Number(user.balance || 0).toLocaleString('vi-VN')}đ</span>
+          <strong style="color:#ff9999;font-size:1.25rem;">${user.u}</strong><br>
+          <span style="color:#ff9999;">Số dư: ${Number(user.balance || 0).toLocaleString('vi-VN')}đ</span>
         </div>
         <div style="display:flex;gap:12px;flex-wrap:wrap;">
           <input type="number" id="amt_${idx}" placeholder="Số tiền" style="width:140px;">
           <button class="action-btn" onclick="changeBalance(${idx}, true)">+ Tiền</button>
-          <button class="action-btn" style="background:#991b1b;" onclick="changeBalance(${idx}, false)">- Tiền</button>
+          <button class="action-btn" style="background:#990000;" onclick="changeBalance(${idx}, false)">- Tiền</button>
           <button class="delete-btn" onclick="deleteUser(${idx})">Xóa</button>
         </div>
       </div>
     `;
   });
 
-  list.innerHTML = html || "<p style='text-align:center;color:#fda4af;padding:20px;'>Không tìm thấy user</p>";
+  list.innerHTML = html || "<p style='text-align:center;color:#ff9999;padding:20px;'>Không tìm thấy user</p>";
 }
 
 function changeBalance(index, isAdd) {
@@ -985,9 +990,9 @@ function renderPendingOrders() {
         html += `
           <div class="order-item">
             <div>
-              <strong style="color:#fecaca;font-size:1.25rem;">${user.u}</strong><br>
-              <span style="color:#fda4af;">Sản phẩm: ${order.productName}</span><br>
-              <span style="color:#fbbf24;">${order.date}</span>
+              <strong style="color:#ff9999;font-size:1.25rem;">${user.u}</strong><br>
+              <span style="color:#ff9999;">Sản phẩm: ${order.productName}</span><br>
+              <span style="color:#ffcc00;">${order.date}</span>
             </div>
             <button class="approve-btn" onclick="approveOrder('${user.u}', ${ordIdx})">Duyệt & Gửi TK/MK</button>
           </div>
@@ -996,7 +1001,7 @@ function renderPendingOrders() {
     });
   });
 
-  container.innerHTML = html || "<p style='text-align:center;color:#fda4af;padding:20px;'>Không có đơn chờ duyệt</p>";
+  container.innerHTML = html || "<p style='text-align:center;color:#ff9999;padding:20px;'>Không có đơn chờ duyệt</p>";
 }
 
 function approveOrder(username, orderIndex) {
@@ -1031,19 +1036,19 @@ function renderProductList() {
     html += `
       <div class="product-item">
         <div>
-          <strong style="color:#fecaca;">${p.name}</strong><br>
-          <span style="color:#fda4af;">${p.desc || ''} - ${Number(p.price).toLocaleString('vi-VN')}đ - Tồn kho: ${p.inventory || 0}</span>
+          <strong style="color:#ff9999;">${p.name}</strong><br>
+          <span style="color:#ff9999;">${p.desc || ''} - ${Number(p.price).toLocaleString('vi-VN')}đ - Tồn kho: ${p.inventory || 0}</span>
         </div>
         <div style="display:flex;gap:12px;">
           <input type="number" id="inv_${i}" placeholder="Tồn kho mới" style="width:140px;">
-          <button class="action-btn" style="background:#16a34a;" onclick="updateInventory(${i})">Cập nhật Tồn kho</button>
+          <button class="action-btn" style="background:#00cc66;" onclick="updateInventory(${i})">Cập nhật Tồn kho</button>
           <button class="delete-btn" onclick="deleteProduct(${i})">Xóa</button>
         </div>
       </div>
     `;
   });
 
-  container.innerHTML = html || "<p style='text-align:center;color:#fda4af;padding:20px;'>Chưa có sản phẩm</p>";
+  container.innerHTML = html || "<p style='text-align:center;color:#ff9999;padding:20px;'>Chưa có sản phẩm</p>";
 }
 
 function updateInventory(index) {
@@ -1108,15 +1113,15 @@ function renderDiscountList() {
     html += `
       <div class="discount-item">
         <div>
-          <strong style="color:#fecaca;">${d.code}</strong><br>
-          <span style="color:#fda4af;">Giảm ${d.percent}%</span>
+          <strong style="color:#ff9999;">${d.code}</strong><br>
+          <span style="color:#ff9999;">Giảm ${d.percent}%</span>
         </div>
         <button class="delete-btn" onclick="deleteDiscount(${i})">Xóa</button>
       </div>
     `;
   });
 
-  container.innerHTML = html || "<p style='text-align:center;color:#fda4af;padding:20px;'>Chưa có mã giảm giá</p>";
+  container.innerHTML = html || "<p style='text-align:center;color:#ff9999;padding:20px;'>Chưa có mã giảm giá</p>";
 }
 
 function addNewDiscount() {
@@ -1186,3 +1191,4 @@ render();
 </script>
 </body>
 </html>
+``` document.get
