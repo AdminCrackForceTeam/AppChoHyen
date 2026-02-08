@@ -40,6 +40,12 @@
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     text-shadow: 0 0 20px rgba(255, 45, 85, 0.7);
+    animation: glow 2s ease-in-out infinite alternate;
+  }
+
+  @keyframes glow {
+    from { text-shadow: 0 0 10px rgba(255, 45, 85, 0.5); }
+    to { text-shadow: 0 0 30px rgba(255, 45, 85, 1); }
   }
 
   .top-right {
@@ -59,11 +65,31 @@
     cursor: pointer;
     transition: all 0.25s ease;
     box-shadow: 0 3px 10px rgba(239, 68, 68, 0.4);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .top-right button::before, .top-right .admin-btn::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255,255,255,0.2) 0%, transparent 70%);
+    opacity: 0;
+    transition: all 0.5s;
+  }
+
+  .top-right button:hover::before, .top-right .admin-btn:hover::before {
+    opacity: 1;
+    top: 0;
+    left: 0;
   }
 
   .top-right button:hover, .top-right .admin-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 20px rgba(239, 68, 68, 0.6);
+    transform: translateY(-2px) scale(1.05);
+    box-shadow: 0 8px 20px rgba(239, 68, 68, 0.6), 0 0 30px rgba(239, 68, 68, 0.8);
     background: linear-gradient(135deg, #f87171, #ef4444);
   }
 
@@ -83,6 +109,7 @@
     padding: 30px 20px;
     border: 1px solid rgba(239, 68, 68, 0.25);
     height: fit-content;
+    box-shadow: 0 0 20px rgba(239, 68, 68, 0.3);
   }
 
   .sidebar h3 {
@@ -92,6 +119,7 @@
     margin-bottom: 24px;
     text-transform: uppercase;
     letter-spacing: 1.8px;
+    text-shadow: 0 0 5px rgba(248, 113, 113, 0.5);
   }
 
   .sidebar a {
@@ -108,6 +136,7 @@
     position: relative;
     overflow: hidden;
     text-decoration: none;
+    box-shadow: inset 0 0 10px rgba(239, 68, 68, 0.1);
   }
 
   .sidebar a::before {
@@ -129,18 +158,19 @@
     background: rgba(239, 68, 68, 0.18);
     color: #fef2f2;
     transform: translateX(8px) scale(1.05);
-    box-shadow: 0 0 15px rgba(239, 68, 68, 0.5);
+    box-shadow: 0 0 15px rgba(239, 68, 68, 0.5), inset 0 0 20px rgba(239, 68, 68, 0.3);
   }
 
   .sidebar a i {
     margin-right: 12px;
     font-size: 1.2rem;
     color: #ef4444;
-    transition: transform 0.3s;
+    transition: transform 0.3s, color 0.3s;
   }
 
   .sidebar a:hover i {
     transform: rotate(360deg);
+    color: #fff;
   }
 
   .content { flex: 1; min-width: 340px; }
@@ -153,6 +183,7 @@
     margin-bottom: 35px;
     font-size: 1.05rem;
     backdrop-filter: blur(8px);
+    box-shadow: 0 4px 15px rgba(239, 68, 68, 0.2);
   }
 
   .products {
@@ -168,11 +199,12 @@
     border: 1px solid rgba(239, 68, 68, 0.25);
     transition: all 0.4s ease;
     backdrop-filter: blur(10px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.5);
   }
 
   .card:hover {
     transform: translateY(-16px);
-    box-shadow: 0 28px 60px -14px rgba(239, 68, 68, 0.4);
+    box-shadow: 0 28px 60px -14px rgba(239, 68, 68, 0.4), 0 0 40px rgba(239, 68, 68, 0.6);
     border-color: #ef4444;
   }
 
@@ -180,6 +212,7 @@
     color: #fecaca;
     font-size: 1.45rem;
     margin-bottom: 12px;
+    text-shadow: 0 0 5px rgba(254, 202, 202, 0.3);
   }
 
   .price {
@@ -187,10 +220,18 @@
     font-size: 1.8rem;
     font-weight: 800;
     margin: 14px 0 10px;
+    text-shadow: 0 0 10px rgba(251, 191, 36, 0.5);
   }
 
   .sold {
     color: #34d399;
+    font-size: 1.05rem;
+    font-weight: 600;
+    margin-bottom: 8px;
+  }
+
+  .inventory {
+    color: #a5b4fc;
     font-size: 1.05rem;
     font-weight: 600;
     margin-bottom: 18px;
@@ -206,19 +247,39 @@
     border-radius: 12px;
     cursor: pointer;
     transition: all 0.3s ease;
-    box-shadow: 0 6px 16px rgba(239, 68, 68, 0.4);
+    box-shadow: 0 6px 16px rgba(239, 68, 68, 0.4), 0 0 20px rgba(239, 68, 68, 0.3);
     border: 2px solid transparent;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .buy::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    background: rgba(255,255,255,0.2);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    transition: width 0.6s ease, height 0.6s ease;
+  }
+
+  .buy:hover::before {
+    width: 300px;
+    height: 300px;
   }
 
   .buy:hover {
     background: linear-gradient(135deg, #f87171, #ef4444);
     transform: translateY(-3px) scale(1.04);
-    box-shadow: 0 12px 30px rgba(239, 68, 68, 0.6);
+    box-shadow: 0 12px 30px rgba(239, 68, 68, 0.6), 0 0 40px rgba(239, 68, 68, 0.8);
   }
 
   .buy:active {
     border: 2px solid #ef4444;
-    box-shadow: 0 0 12px rgba(239, 68, 68, 0.8);
+    box-shadow: 0 0 12px rgba(239, 68, 68, 0.8), inset 0 0 20px rgba(239, 68, 68, 0.5);
     transform: translateY(0) scale(1);
   }
 
@@ -229,12 +290,14 @@
     margin-bottom: 40px;
     border: 1px solid rgba(239, 68, 68, 0.25);
     backdrop-filter: blur(10px);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.6);
   }
 
   .box h3, .box h4 {
     color: #f87171;
     margin-bottom: 28px;
     font-size: 1.5rem;
+    text-shadow: 0 0 8px rgba(248, 113, 113, 0.4);
   }
 
   input, textarea, select {
@@ -246,12 +309,13 @@
     color: white;
     margin-bottom: 20px;
     font-size: 1.05rem;
+    transition: all 0.3s;
   }
 
   input:focus, textarea:focus, select:focus {
     outline: none;
     border-color: #ef4444;
-    box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.3);
+    box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.3), 0 0 15px rgba(239, 68, 68, 0.5);
   }
 
   button.action-btn {
@@ -264,12 +328,32 @@
     font-size: 1.1rem;
     cursor: pointer;
     transition: all 0.3s;
-    box-shadow: 0 6px 20px rgba(239, 68, 68, 0.5);
+    box-shadow: 0 6px 20px rgba(239, 68, 68, 0.5), 0 0 25px rgba(239, 68, 68, 0.3);
+    position: relative;
+    overflow: hidden;
+  }
+
+  button.action-btn::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    background: rgba(255,255,255,0.2);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    transition: width 0.6s ease, height 0.6s ease;
+  }
+
+  button.action-btn:hover::before {
+    width: 400px;
+    height: 400px;
   }
 
   button.action-btn:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 15px 35px rgba(239, 68, 68, 0.7);
+    transform: translateY(-3px) scale(1.05);
+    box-shadow: 0 15px 35px rgba(239, 68, 68, 0.7), 0 0 40px rgba(239, 68, 68, 0.8);
   }
 
   .delete-btn {
@@ -280,9 +364,15 @@
     border: none;
     cursor: pointer;
     font-size: 1rem;
+    transition: all 0.3s;
+    box-shadow: 0 4px 10px rgba(153, 27, 27, 0.4);
   }
 
-  .delete-btn:hover { background: #b91c1c; }
+  .delete-btn:hover { 
+    background: #b91c1c; 
+    transform: scale(1.1);
+    box-shadow: 0 8px 20px rgba(153, 27, 27, 0.6);
+  }
 
   .approve-btn {
     background: #16a34a;
@@ -292,11 +382,17 @@
     border: none;
     cursor: pointer;
     font-size: 1rem;
+    transition: all 0.3s;
+    box-shadow: 0 4px 10px rgba(22, 163, 74, 0.4);
   }
 
-  .approve-btn:hover { background: #22c55e; }
+  .approve-btn:hover { 
+    background: #22c55e; 
+    transform: scale(1.1);
+    box-shadow: 0 8px 20px rgba(22, 163, 74, 0.6);
+  }
 
-  .user-list-item, .product-item, .order-item {
+  .user-list-item, .product-item, .order-item, .discount-item {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -308,6 +404,11 @@
     flex-wrap: wrap;
     gap: 20px;
     font-size: 1.1rem;
+    transition: all 0.3s;
+  }
+
+  .user-list-item:hover, .product-item:hover, .order-item:hover, .discount-item:hover {
+    box-shadow: 0 0 15px rgba(239, 68, 68, 0.3);
   }
 
   .search-input {
@@ -325,6 +426,7 @@
     align-items: center;
     justify-content: center;
     z-index: 9999;
+    transition: opacity 0.3s ease;
   }
 
   .modal.hidden { display: none; }
@@ -336,9 +438,15 @@
     border-radius: 24px;
     padding: 50px 60px;
     border: 1px solid rgba(239, 68, 68, 0.4);
-    box-shadow: 0 35px 80px rgba(0,0,0,0.75);
+    box-shadow: 0 35px 80px rgba(0,0,0,0.75), 0 0 50px rgba(239, 68, 68, 0.2);
     max-height: 90vh;
     overflow-y: auto;
+    animation: fadeIn 0.5s ease;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: scale(0.9); }
+    to { opacity: 1; transform: scale(1); }
   }
 
   .modal h3 {
@@ -346,6 +454,7 @@
     text-align: center;
     margin-bottom: 40px;
     font-size: 2.1rem;
+    text-shadow: 0 0 10px rgba(248, 113, 113, 0.5);
   }
 
   .qr-preview {
@@ -354,6 +463,7 @@
     border: 3px solid #ef4444;
     margin: 24px auto;
     display: block;
+    box-shadow: 0 0 20px rgba(239, 68, 68, 0.4);
   }
 
   @media (max-width: 768px) {
@@ -454,6 +564,7 @@
       <input id="newProductName" placeholder="Tên sản phẩm">
       <input id="newProductDesc" placeholder="Mô tả ngắn">
       <input id="newProductPrice" type="number" placeholder="Giá (đ)">
+      <input id="newProductInventory" type="number" placeholder="Số lượng tồn kho">
       <button class="action-btn" onclick="addNewProduct()">Thêm Sản Phẩm</button>
     </div>
 
@@ -504,14 +615,20 @@ const storage = getStorage();
 
 let users = JSON.parse(storage.getItem("users") || "[]");
 let products = JSON.parse(storage.getItem("products") || "[]");
-let discounts = JSON.parse(storage.getItem("discounts") || "[]"); // Mới: Danh sách mã giảm giá
+let discounts = JSON.parse(storage.getItem("discounts") || "[]");
 let notice = storage.getItem("notice") || "⚡ Shop uy tín - Giao dịch an toàn 100%";
 let qr = storage.getItem("qr") || "https://i.imgur.com/9Z7Y9Kb.png";
 let qrNote = storage.getItem("qrNote") || "Chuyển khoản đúng nội dung → tiền tự động cộng trong 1-5 phút";
 let currentUser = JSON.parse(storage.getItem("currentUser") || "null");
 let view = "shop";
 const ADMIN_PASSWORD = "admin123";
-let currentBuyIndex = -1; // Để lưu index sản phẩm đang mua
+let currentBuyIndex = -1;
+
+// Khởi tạo admin nếu chưa có
+if (!users.some(u => u.u === "admin")) {
+  users.push({ u: "admin", p: hash("admin123"), balance: 0, orders: [] });
+  saveAll();
+}
 
 function hash(str) {
   let h = 0;
@@ -526,7 +643,7 @@ function isAdmin() {
 function saveAll() {
   storage.setItem("users", JSON.stringify(users));
   storage.setItem("products", JSON.stringify(products));
-  storage.setItem("discounts", JSON.stringify(discounts)); // Mới
+  storage.setItem("discounts", JSON.stringify(discounts));
   storage.setItem("notice", notice);
   storage.setItem("qr", qr);
   storage.setItem("qrNote", qrNote);
@@ -539,7 +656,7 @@ function saveAll() {
 function render() {
   const topRight = document.getElementById("topRight");
   let html = currentUser 
-    ? `<span>${currentUser.u} • ${Number(currentUser.balance || 0).toLocaleString('vi-VN')}đ</span>`
+    ? `<span style="color:#fecaca; font-weight:600;">${currentUser.u} • <span style="color:#fbbf24;">${Number(currentUser.balance || 0).toLocaleString('vi-VN')}đ</span></span>`
     : `<button onclick="openLogin()">Đăng nhập</button><button onclick="openRegister()">Đăng ký</button>`;
 
   if (isAdmin()) {
@@ -567,8 +684,9 @@ function render() {
             <h4>${p.name}</h4>
             <div style="color:#fda4af;margin:10px 0;">${p.desc || ''}</div>
             <div class="price">${Number(p.price || 0).toLocaleString('vi-VN')}đ</div>
-            <div class="sold">Đã có <strong>${Number(p.sold || 0).toLocaleString('vi-VN')}</strong> người mua</div>
-            <div class="buy" onclick="openBuyModal(${i})">MUA NGAY</div>
+            <div class="sold">Đã bán: <strong>${Number(p.sold || 0).toLocaleString('vi-VN')}</strong></div>
+            <div class="inventory">Còn lại: <strong>${Number(p.inventory || 0).toLocaleString('vi-VN')} cái</strong></div>
+            <div class="buy" onclick="${p.inventory > 0 ? `openBuyModal(${i})` : `alert('Sản phẩm tạm hết hàng!')`}">${p.inventory > 0 ? 'MUA NGAY' : 'HẾT HÀNG'}</div>
           </div>
         `).join("") : "<div style='text-align:center;padding:100px 0;color:#fda4af;font-size:1.3rem;'>Chưa có sản phẩm</div>"}
       </div>`;
@@ -622,7 +740,8 @@ function openRegister() { document.getElementById("regModal").classList.remove("
 function login() {
   const u = document.getElementById("lu").value.trim();
   const p = document.getElementById("lp").value;
-  if (!u || !p) return alert("Nhập đầy đủ thông tin!");
+  if (!u || !p) return alert("Vui lòng nhập đầy đủ thông tin!");
+  if (u.length < 4 || p.length < 6) return alert("Tên đăng nhập ≥4 ký tự, mật khẩu ≥6 ký tự!");
 
   const user = users.find(x => x.u === u && x.p === hash(p));
   if (!user) return alert("Sai tên đăng nhập hoặc mật khẩu!");
@@ -649,7 +768,7 @@ function register() {
 
   document.getElementById("regModal").classList.add("hidden");
   render();
-  alert("Đăng ký thành công! Bạn có thể đăng nhập ngay.");
+  alert("Đăng ký thành công! Bạn đã được đăng nhập tự động.");
 }
 
 function logout() {
@@ -665,7 +784,7 @@ function openBuyModal(index) {
   if (!currentUser) return alert("Vui lòng đăng nhập để mua!");
 
   const product = products[index];
-  if (!product) return alert("Sản phẩm không tồn tại!");
+  if (!product || product.inventory <= 0) return alert("Sản phẩm không tồn tại hoặc hết hàng!");
 
   currentBuyIndex = index;
   document.getElementById("buyProductName").innerText = `Sản phẩm: ${product.name}`;
@@ -676,12 +795,14 @@ function openBuyModal(index) {
 
   // Sự kiện oninput cho mã giảm giá
   document.getElementById("discountCode").oninput = function() {
-    const code = this.value.trim();
+    const code = this.value.trim().toUpperCase();
     const discount = discounts.find(d => d.code === code);
     let finalPrice = product.price;
     if (discount) {
       finalPrice = Math.round(product.price * (1 - discount.percent / 100));
       alert(`Áp dụng thành công! Giảm ${discount.percent}%`);
+    } else if (code) {
+      alert("Mã giảm giá không hợp lệ!");
     }
     document.getElementById("finalPrice").innerText = `Giá cuối: ${Number(finalPrice).toLocaleString('vi-VN')}đ`;
   };
@@ -689,7 +810,7 @@ function openBuyModal(index) {
 
 function confirmBuy() {
   const product = products[currentBuyIndex];
-  const code = document.getElementById("discountCode").value.trim();
+  const code = document.getElementById("discountCode").value.trim().toUpperCase();
   const discount = discounts.find(d => d.code === code);
   let finalPrice = product.price;
   if (discount) {
@@ -703,6 +824,7 @@ function confirmBuy() {
     setTimeout(() => {
       currentUser.balance -= finalPrice;
       product.sold = (product.sold || 0) + 1;
+      product.inventory = (product.inventory || 0) - 1;
 
       currentUser.orders = currentUser.orders || [];
       currentUser.orders.push({
@@ -738,7 +860,7 @@ function openAdminPanel() {
   renderUserList();
   renderPendingOrders();
   renderProductList();
-  renderDiscountList(); // Mới
+  renderDiscountList();
 }
 
 function closeAdmin() {
@@ -776,13 +898,13 @@ function renderUserList() {
 function changeBalance(index, isAdd) {
   const input = document.getElementById(`amt_${index}`);
   const amount = Number(input.value);
-  if (!amount || amount <= 0) return alert("Nhập số tiền hợp lệ!");
+  if (isNaN(amount) || amount <= 0) return alert("Nhập số tiền hợp lệ >0!");
 
   if (!confirm(`Xác nhận ${isAdd ? 'cộng' : 'trừ'} ${amount.toLocaleString('vi-VN')}đ ?`)) return;
 
   showLoading();
   setTimeout(() => {
-    if (isAdd) users[index].balance += amount;
+    if (isAdd) users[index].balance = (users[index].balance || 0) + amount;
     else users[index].balance = Math.max(0, (users[index].balance || 0) - amount);
 
     if (currentUser && currentUser.u === users[index].u) {
@@ -793,12 +915,13 @@ function changeBalance(index, isAdd) {
     renderUserList();
     render();
     hideLoading();
+    alert(`Đã ${isAdd ? 'cộng' : 'trừ'} tiền thành công!`);
   }, 600);
 }
 
 function deleteUser(index) {
   if (users[index].u === "admin") return alert("Không thể xóa tài khoản admin!");
-  if (!confirm("Xóa người dùng này vĩnh viễn?")) return;
+  if (!confirm("Xóa người dùng này vĩnh viễn? Tất cả dữ liệu sẽ mất!")) return;
 
   showLoading();
   setTimeout(() => {
@@ -810,6 +933,7 @@ function deleteUser(index) {
     renderUserList();
     render();
     hideLoading();
+    alert("Đã xóa user!");
   }, 600);
 }
 
@@ -818,9 +942,10 @@ function addNewUser() {
   const pass = document.getElementById("newUserPass").value;
   const bal = Number(document.getElementById("newUserBalance").value) || 0;
 
-  if (name.length < 4) return alert("Tên tài khoản");
-  if (pass.length < 6) return alert("Nhập mật khẩu");
-  if (users.some(u => u.u === name)) return alert("Tên đã tồn tại!");
+  if (name.length < 4) return alert("Tên đăng nhập phải ≥4 ký tự!");
+  if (pass.length < 6) return alert("Mật khẩu phải ≥6 ký tự!");
+  if (users.some(u => u.u === name)) return alert("Tên đăng nhập đã tồn tại!");
+  if (isNaN(bal) || bal < 0) return alert("Số dư phải là số ≥0!");
 
   showLoading();
   setTimeout(() => {
@@ -831,7 +956,7 @@ function addNewUser() {
     document.getElementById("newUserBalance").value = "";
     renderUserList();
     hideLoading();
-    alert("Đã thêm user!");
+    alert("Đã thêm user mới!");
   }, 700);
 }
 
@@ -860,13 +985,13 @@ function renderPendingOrders() {
 }
 
 function approveOrder(username, orderIndex) {
-  const details = prompt("Nhập tài khoản / mật khẩu cho đơn này:");
-  if (!details) return alert("Bạn phải nhập thông tin tài khoản!");
+  const details = prompt("Nhập tài khoản / mật khẩu cho đơn này (bắt buộc):");
+  if (!details.trim()) return alert("Bạn phải nhập thông tin tài khoản!");
 
   showLoading();
   setTimeout(() => {
     const userIdx = users.findIndex(u => u.u === username);
-    if (userIdx === -1) return;
+    if (userIdx === -1) return alert("User không tồn tại!");
 
     users[userIdx].orders[orderIndex].status = 'approved';
     users[userIdx].orders[orderIndex].details = details;
@@ -879,7 +1004,7 @@ function approveOrder(username, orderIndex) {
     renderPendingOrders();
     render();
     hideLoading();
-    alert("Đã duyệt đơn!");
+    alert("Đã duyệt đơn và gửi chi tiết!");
   }, 700);
 }
 
@@ -892,9 +1017,13 @@ function renderProductList() {
       <div class="product-item">
         <div>
           <strong style="color:#fecaca;">${p.name}</strong><br>
-          <span style="color:#fda4af;">${p.desc || ''} - ${Number(p.price).toLocaleString('vi-VN')}đ</span>
+          <span style="color:#fda4af;">${p.desc || ''} - ${Number(p.price).toLocaleString('vi-VN')}đ - Tồn kho: ${p.inventory || 0}</span>
         </div>
-        <button class="delete-btn" onclick="deleteProduct(${i})">Xóa</button>
+        <div style="display:flex;gap:12px;">
+          <input type="number" id="inv_${i}" placeholder="Tồn kho mới" style="width:140px;">
+          <button class="action-btn" style="background:#16a34a;" onclick="updateInventory(${i})">Cập nhật Tồn kho</button>
+          <button class="delete-btn" onclick="deleteProduct(${i})">Xóa</button>
+        </div>
       </div>
     `;
   });
@@ -902,21 +1031,41 @@ function renderProductList() {
   container.innerHTML = html || "<p style='text-align:center;color:#fda4af;padding:20px;'>Chưa có sản phẩm</p>";
 }
 
+function updateInventory(index) {
+  const input = document.getElementById(`inv_${index}`);
+  const newInv = Number(input.value);
+  if (isNaN(newInv) || newInv < 0) return alert("Số lượng tồn kho phải ≥0!");
+
+  if (!confirm(`Cập nhật tồn kho thành ${newInv}?`)) return;
+
+  showLoading();
+  setTimeout(() => {
+    products[index].inventory = newInv;
+    saveAll();
+    renderProductList();
+    hideLoading();
+    alert("Đã cập nhật tồn kho!");
+  }, 600);
+}
+
 function addNewProduct() {
   const name = document.getElementById("newProductName").value.trim();
   const desc = document.getElementById("newProductDesc").value.trim();
   const price = Number(document.getElementById("newProductPrice").value);
+  const inventory = Number(document.getElementById("newProductInventory").value) || 0;
 
   if (!name) return alert("Nhập tên sản phẩm!");
   if (isNaN(price) || price <= 0) return alert("Giá phải là số dương!");
+  if (isNaN(inventory) || inventory < 0) return alert("Tồn kho phải ≥0!");
 
   showLoading();
   setTimeout(() => {
-    products.push({ name, desc, price, sold: 0 });
+    products.push({ name, desc, price, sold: 0, inventory });
     saveAll();
     document.getElementById("newProductName").value = "";
     document.getElementById("newProductDesc").value = "";
     document.getElementById("newProductPrice").value = "";
+    document.getElementById("newProductInventory").value = "";
     renderProductList();
     hideLoading();
     alert("Đã thêm sản phẩm!");
@@ -924,13 +1073,14 @@ function addNewProduct() {
 }
 
 function deleteProduct(index) {
-  if (!confirm("Xóa sản phẩm này?")) return;
+  if (!confirm("Xóa sản phẩm này? Tất cả dữ liệu liên quan sẽ mất!")) return;
   showLoading();
   setTimeout(() => {
     products.splice(index, 1);
     saveAll();
     renderProductList();
     hideLoading();
+    alert("Đã xóa sản phẩm!");
   }, 600);
 }
 
@@ -941,7 +1091,7 @@ function renderDiscountList() {
 
   discounts.forEach((d, i) => {
     html += `
-      <div class="product-item">
+      <div class="discount-item">
         <div>
           <strong style="color:#fecaca;">${d.code}</strong><br>
           <span style="color:#fda4af;">Giảm ${d.percent}%</span>
@@ -982,11 +1132,14 @@ function deleteDiscount(index) {
     saveAll();
     renderDiscountList();
     hideLoading();
+    alert("Đã xóa mã giảm giá!");
   }, 600);
 }
 
 function saveNotice() {
-  notice = document.getElementById("n").value.trim() || notice;
+  const newNotice = document.getElementById("n").value.trim();
+  if (!newNotice) return alert("Thông báo không được để trống!");
+  notice = newNotice;
   saveAll();
   alert("Đã lưu thông báo!");
   render();
@@ -994,7 +1147,8 @@ function saveNotice() {
 
 function saveQR() {
   const note = document.getElementById("qn").value.trim();
-  qrNote = note || qrNote;
+  if (!note) return alert("Ghi chú không được để trống!");
+  qrNote = note;
 
   const fileInput = document.getElementById("qrFileInput");
   if (fileInput.files && fileInput.files[0]) {
@@ -1017,4 +1171,3 @@ render();
 </script>
 </body>
 </html>
-```newUser
