@@ -664,55 +664,78 @@
 </div>
 
 <script>
+// ================== KẾT NỐI VỚI FIREBASE ==================
+const firebaseConfig = {
+  apiKey: "AIzaSyCd7ostkXLtRFixuTCLMTDM1H5UX44xwn0",
+  authDomain: "tun-media-shop.firebaseapp.com",
+  databaseURL: "https://tun-media-shop-default-rtdb.firebaseio.com",
+  projectId: "tun-media-shop",
+  storageBucket: "tun-media-shop.firebasestorage.app",
+  messagingSenderId: "558685583933",
+  appId: "1:558685583933:web:5290bd98958b6804350854",
+  measurementId: "G-YLV8WBFNFF"
+};
+
+firebase.initializeApp(firebaseConfig);
+const db = firebase.database();
+
 // ================== BIẾN TOÀN CỤC ==================
 const loadingOverlay = document.getElementById("loadingOverlay");
 function showLoading() { loadingOverlay.style.opacity = "1"; loadingOverlay.style.visibility = "visible"; }
 function hideLoading() { setTimeout(() => { loadingOverlay.style.opacity = "0"; loadingOverlay.style.visibility = "hidden"; }, 600); }
 
-function getStorage() {
-  try { return localStorage; } catch(e) {
-    return { data:{}, getItem(k){return this.data[k]||null;}, setItem(k,v){this.data[k]=v+'';}, removeItem(k){delete this.data[k];} };
-  }
-}
-const storage = getStorage();
-
-let users = JSON.parse(storage.getItem("users") || "[]");
-let products = JSON.parse(storage.getItem("products") || "[]");
-let discounts = JSON.parse(storage.getItem("discounts") || "[]");
-let notice = storage.getItem("notice") || "⚡ Shop uy tín - Giao dịch an toàn 100%";
-let qr = storage.getItem("qr") || "https://i.imgur.com/9Z7Y9Kb.png";
-let qrNote = storage.getItem("qrNote") || "Chuyển khoản đúng nội dung → tiền tự động cộng trong 1-5 phút";
-let currentUser = JSON.parse(storage.getItem("currentUser") || "null");
+let users = [];
+let products = [];
+let discounts = [];
+let notice = "⚡ Shop uy tín - Giao dịch an toàn 100%";
+let qr = "https://i.imgur.com/9Z7Y9Kb.png";
+let qrNote = "Chuyển khoản đúng nội dung → tiền tự động cộng trong 1-5 phút";
+let currentUser = JSON.parse(localStorage.getItem("currentUser") || "null");  // Giữ local cho currentUser để nhớ đăng nhập
 let view = "shop";
 const ADMIN_PASSWORD = "admin123";
 let currentBuyIndex = -1;
 
 // Khởi tạo admin nếu chưa có
-if (!users.some(u => u.u === "admin")) {
-  users.push({ u: "admin", p: hash("admin123"), balance: 0, orders: [] });
-  saveAll();
-}
-
-function hash(str) {
-  let h = 0;
-  for(let i = 0; i < str.length; i++) h = (h << 5) - h + str.charCodeAt(i);
-  return h.toString(36);
-}
-
-function isAdmin() {
-  return currentUser && currentUser.u === "admin";
-}
-
-function saveAll() {
-  storage.setItem("users", JSON.stringify(users));
-  storage.setItem("products", JSON.stringify(products));
-  storage.setItem("discounts", JSON.stringify(discounts));
-  storage.setItem("notice", notice);
-  storage.setItem("qr", qr);
-  storage.setItem("qrNote", qrNote);
-  if (currentUser) {
-    storage.setItem("currentUser", JSON.stringify(currentUser));
+db.ref('users').once('value').then((snapshot) => {
+  const allUsers = snapshot.val() || [];
+  if (!allUsers.some(u => u.u === "admin")) {
+    allUsers.push({ u: "admin", p: hash("admin123"), balance: 0, orders: [] });
+    db.ref('users').set(allUsers);
   }
+});
+
+// Load dữ liệu từ Firebase khi trang khởi động
+function loadDataFromFirebase() {
+  db.ref('/').once('value').then((snapshot) => {
+    const data = snapshot.val() || {};
+    users = data.users || [];
+    products = data.products || [];
+    discounts = data.discounts || [];
+    notice = data.notice || notice;
+    qr = data.qr || qr;
+    qrNote = data.qrNote || qrNote;
+    render();
+  }).catch((error) => {
+    console.error("Lỗi load Firebase:", error);
+    render();
+  });
+}
+
+// Lưu dữ liệu lên Firebase
+function saveAll() {
+  const data = {
+    users,
+    products,
+    discounts,
+    notice,
+    qr,
+    qrNote
+  };
+  db.ref('/').set(data).then(() => {
+    console.log("Đã lưu lên Firebase");
+  }).catch((error) => {
+    console.error("Lỗi lưu Firebase:", error);
+  });
 }
 
 // ================== RENDER CHÍNH ==================
@@ -814,7 +837,7 @@ function login() {
   if (!user) return alert("Sai tên đăng nhập hoặc mật khẩu!");
 
   currentUser = {...user};
-  storage.setItem("currentUser", JSON.stringify(currentUser));
+  localStorage.setItem("currentUser", JSON.stringify(currentUser));
   document.getElementById("loginModal").classList.add("hidden");
   render();
   alert("Đăng nhập thành công!");
@@ -841,7 +864,7 @@ function register() {
 function logout() {
   if (!confirm("Bạn có chắc muốn đăng xuất?")) return;
   currentUser = null;
-  storage.removeItem("currentUser");
+  localStorage.removeItem("currentUser");
   render();
   alert("Đã đăng xuất!");
 }
@@ -903,6 +926,7 @@ function confirmBuy() {
       if (userIndex !== -1) users[userIndex] = {...currentUser};
 
       saveAll();
+      localStorage.setItem("currentUser", JSON.stringify(currentUser)); // Lưu local cho user hiện tại
       document.getElementById("buyModal").classList.add("hidden");
       render();
       hideLoading();
@@ -936,22 +960,19 @@ function closeAdmin() {
 // ================== SAO LƯU / KHÔI PHỤC DỮ LIỆU ==================
 function exportAndCopyData() {
   const data = {
-    users: users,
-    products: products,
-    discounts: discounts,
-    notice: notice,
-    qr: qr,
-    qrNote: qrNote,
-    timestamp: new Date().toISOString()
+    users,
+    products,
+    discounts,
+    notice,
+    qr,
+    qrNote
   };
   
   const jsonStr = JSON.stringify(data, null, 2);
   
-  // Tự động copy vào clipboard
   navigator.clipboard.writeText(jsonStr).then(() => {
     alert("Đã sao chép toàn bộ dữ liệu vào bộ nhớ tạm!\n\nBạn chỉ cần dán (Ctrl+V) vào ô khôi phục trên thiết bị khác là được.");
   }).catch(err => {
-    // Nếu không copy được (một số trình duyệt cũ hoặc quyền), fallback về prompt
     prompt("Copy thủ công (Ctrl+C):\n\n", jsonStr);
     alert("Trình duyệt không cho phép tự động copy. Vui lòng copy thủ công từ hộp thoại.");
   });
@@ -969,19 +990,17 @@ function importData() {
   try {
     const imported = JSON.parse(text);
     
-    // Gán dữ liệu
-    if (imported.users) users = imported.users;
-    if (imported.products) products = imported.products;
-    if (imported.discounts) discounts = imported.discounts;
-    if (imported.notice) notice = imported.notice;
-    if (imported.qr) qr = imported.qr;
-    if (imported.qrNote) qrNote = imported.qrNote;
+    users = imported.users || [];
+    products = imported.products || [];
+    discounts = imported.discounts || [];
+    notice = imported.notice || notice;
+    qr = imported.qr || qr;
+    qrNote = imported.qrNote || qrNote;
 
     saveAll();
     render();
     alert("Khôi phục dữ liệu thành công!\n\n Trang sẽ tự động cập nhật giống dữ liệu bạn đã sao lưu.");
     
-    // Refresh admin panel
     document.getElementById("n").value = notice;
     document.getElementById("qn").value = qrNote;
     document.getElementById("qrPreview").src = qr;
@@ -995,7 +1014,7 @@ function importData() {
   }
 }
 
-// ================== USER FUNCTIONS ==================
+// ================== CÁC HÀM ADMIN KHÁC ==================
 function renderUserList() {
   const search = document.getElementById("userSearch").value.toLowerCase().trim();
   const container = document.getElementById("userList");
@@ -1003,7 +1022,7 @@ function renderUserList() {
 
   const filtered = users.filter(u => u.u !== "admin" && (!search || u.u.toLowerCase().includes(search)));
 
-  filtered.forEach((user, idx) => {
+  filtered.forEach((user, i) => {
     html += `
       <div class="user-list-item">
         <div>
@@ -1011,10 +1030,10 @@ function renderUserList() {
           <span style="color:#ff9999;">Số dư: ${Number(user.balance || 0).toLocaleString('vi-VN')}đ</span>
         </div>
         <div style="display:flex;gap:12px;flex-wrap:wrap;">
-          <input type="number" id="amt_${idx}" placeholder="Số tiền" style="width:140px;">
-          <button class="action-btn" onclick="changeBalance(${idx}, true)">+ Tiền</button>
-          <button class="action-btn" style="background:#990000;" onclick="changeBalance(${idx}, false)">- Tiền</button>
-          <button class="delete-btn" onclick="deleteUser(${idx})">Xóa</button>
+          <input type="number" id="amt_${i}" placeholder="Số tiền" style="width:140px;">
+          <button class="action-btn" onclick="changeBalance(${i}, true)">+ Tiền</button>
+          <button class="action-btn" style="background:#990000;" onclick="changeBalance(${i}, false)">- Tiền</button>
+          <button class="delete-btn" onclick="deleteUser(${i})">Xóa</button>
         </div>
       </div>
     `;
@@ -1037,6 +1056,7 @@ function changeBalance(index, isAdd) {
 
     if (currentUser && currentUser.u === users[index].u) {
       currentUser.balance = users[index].balance;
+      localStorage.setItem("currentUser", JSON.stringify(currentUser));
     }
 
     saveAll();
@@ -1092,7 +1112,7 @@ function renderPendingOrders() {
   const container = document.getElementById("pendingOrders");
   let html = "";
 
-  users.forEach(user => {
+  users.forEach((user, userIdx) => {
     (user.orders || []).forEach((order, ordIdx) => {
       if (order.status === 'pending') {
         html += `
@@ -1102,7 +1122,7 @@ function renderPendingOrders() {
               <span style="color:#ff9999;">Sản phẩm: ${order.productName}</span><br>
               <span style="color:#ffcc00;">${order.date}</span>
             </div>
-            <button class="approve-btn" onclick="approveOrder('${user.u}', ${ordIdx})">Duyệt & Gửi TK/MK</button>
+            <button class="approve-btn" onclick="approveOrder(${userIdx}, ${ordIdx})">Duyệt & Gửi TK/MK</button>
           </div>
         `;
       }
@@ -1112,20 +1132,18 @@ function renderPendingOrders() {
   container.innerHTML = html || "<p style='text-align:center;color:#ff9999;padding:20px;'>Không có đơn chờ duyệt</p>";
 }
 
-function approveOrder(username, orderIndex) {
+function approveOrder(userIdx, orderIndex) {
   const details = prompt("Nhập tài khoản / mật khẩu cho đơn này (bắt buộc):");
   if (!details.trim()) return alert("Bạn phải nhập thông tin tài khoản!");
 
   showLoading();
   setTimeout(() => {
-    const userIdx = users.findIndex(u => u.u === username);
-    if (userIdx === -1) return alert("User không tồn tại!");
-
     users[userIdx].orders[orderIndex].status = 'approved';
     users[userIdx].orders[orderIndex].details = details;
 
-    if (currentUser && currentUser.u === username) {
+    if (currentUser && currentUser.u === users[userIdx].u) {
       currentUser.orders = users[userIdx].orders;
+      localStorage.setItem("currentUser", JSON.stringify(currentUser));
     }
 
     saveAll();
@@ -1212,7 +1230,6 @@ function deleteProduct(index) {
   }, 600);
 }
 
-// ================== DISCOUNT FUNCTIONS ==================
 function renderDiscountList() {
   const container = document.getElementById("discountList");
   let html = "";
@@ -1295,7 +1312,7 @@ function saveQR() {
 }
 
 // Khởi chạy
-render();
+loadDataFromFirebase();
 </script>
 </body>
 </html>
